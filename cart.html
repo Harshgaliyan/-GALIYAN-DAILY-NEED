@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GALIYAN DAILY NEED | Cart</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+<body data-page="cart">
+    <div class="topbar">
+        <div class="container">
+            <div class="delivery">
+                <i class="fas fa-location-dot"></i>
+                <span>Delivery in Bijnor and nearby areas · Free over ₹500</span>
+            </div>
+            <div class="social">
+                <i class="fas fa-phone"></i>
+                <a href="tel:+919897312151" style="color: white; text-decoration: none;">Call +91 9897312151</a>
+                <a href="https://wa.me/919897312151" target="_blank" rel="noopener noreferrer" style="color: white; text-decoration: none;">WhatsApp</a>
+            </div>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="container nav-wrap">
+            <div class="brand">
+                <div class="brand-icon"><i class="fas fa-shopping-basket"></i></div>
+                <div>
+                    <h1>GALIYAN</h1>
+                    <span>GALIYAN DAILY NEED</span>
+                </div>
+            </div>
+
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="categories.html">Categories</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="cart.html">Cart</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <div class="location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span data-delivery-location>Set delivery location</span>
+                </div>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search groceries" />
+                </div>
+                <button class="cart-button">
+                    <i class="fas fa-cart-shopping"></i>
+                    <span>Cart</span>
+                    <span class="badge" id="cartCount">0</span>
+                </button>
+                <button class="mobile-menu" id="navToggle" type="button" aria-label="Open navigation menu" aria-expanded="false"><i class="fas fa-bars" aria-hidden="true"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <section class="page-hero">
+        <div class="container">
+            <h1>Your Grocery Cart</h1>
+            <p>Delivery is available in Bijnor and nearby areas. Get free delivery on orders of ₹500 or more.</p>
+        </div>
+    </section>
+
+    <section class="cart-page">
+        <div class="container cart-layout">
+            <div class="cart-column">
+                <div class="cart-list"></div>
+                <section class="delivery-address-box" aria-labelledby="deliveryAddressTitle">
+                    <h2 id="deliveryAddressTitle">Delivery address</h2>
+                    <p>We currently serve Bijnor and nearby areas. We will confirm coverage for your exact address, stock, and final total in WhatsApp before accepting your order.</p>
+                    <form class="delivery-address-form" id="cartDeliveryForm" data-delivery-form>
+                        <label for="cartDeliveryName">Full name</label>
+                        <input id="cartDeliveryName" name="name" type="text" autocomplete="name" required>
+                        <label for="cartDeliveryEmail">Email address (optional)</label>
+                        <input id="cartDeliveryEmail" name="email" type="email" autocomplete="email">
+                        <label for="cartDeliveryPhone">Phone number</label>
+                        <input id="cartDeliveryPhone" name="phone" type="tel" autocomplete="tel" required>
+                        <label for="cartDeliveryAddress">House, street, area</label>
+                        <textarea id="cartDeliveryAddress" name="address" autocomplete="street-address" required></textarea>
+                        <label for="cartDeliveryCity">City / town</label>
+                        <input id="cartDeliveryCity" name="city" type="text" autocomplete="address-level2" required>
+                        <label for="cartDeliveryState">State / union territory</label>
+                        <select id="cartDeliveryState" name="state" data-indian-state required>
+                            <option value="">Select your state or union territory</option>
+                        </select>
+                        <label for="cartDeliveryPincode">PIN code</label>
+                        <input id="cartDeliveryPincode" name="pincode" type="text" inputmode="numeric" autocomplete="postal-code" pattern="[1-9][0-9]{5}" maxlength="6" placeholder="6-digit PIN code" title="Enter a valid six-digit Indian PIN code" required>
+                        <button class="btn btn-primary" type="submit">Save delivery address</button>
+                    </form>
+                </section>
+            </div>
+
+            <aside class="summary-box">
+                <h3>Order Summary</h3>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span data-subtotal>₹0</span>
+                </div>
+                <div class="summary-row">
+                    <span>Delivery</span>
+                    <span data-delivery>₹0</span>
+                </div>
+                <p class="delivery-promo" data-delivery-message>Free delivery on orders of ₹500 or more.</p>
+                <div class="summary-row total">
+                    <span>Estimated total</span>
+                    <span data-total>₹0</span>
+                </div>
+
+                <div class="payment-box">
+                    <h4>Payment Method</h4>
+                    <label class="payment-option">
+                        <input type="radio" name="paymentMethod" value="cod" checked />
+                        <span>Cash on Delivery</span>
+                    </label>
+                </div>
+
+                <p class="checkout-note">Your request opens in WhatsApp. Review it and tap Send. The store will confirm availability, delivery, and the final amount (including any applicable taxes). Your cart stays saved until then.</p>
+                <button class="btn btn-primary checkout-button">Request order on WhatsApp</button>
+            </aside>
+        </div>
+    </section>
+
+    <div class="login-modal" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="loginTitle" onclick="if (event.target === this) this.classList.remove('is-open');">
+        <div class="login-modal-content" onclick="event.stopPropagation()">
+            <button class="close-product-modal" type="button" aria-label="Close login form" onclick="document.getElementById('loginModal').classList.remove('is-open'); document.body.style.overflow = '';">&times;</button>
+            <h3 id="loginTitle">Login</h3>
+            <p>Please enter your name to continue.</p>
+            <form id="loginForm">
+                <label for="loginName">Your name</label>
+                <input id="loginName" name="name" type="text" placeholder="Enter your name" required />
+                <button type="submit" class="btn btn-primary">Continue</button>
+            </form>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div>
+                <h3>GALIYAN DAILY NEED</h3>
+                <p>Fresh groceries and daily essentials for Bijnor and nearby areas. Ask us to confirm delivery availability.</p>
+            </div>
+            <div>
+                <h3>Shop</h3>
+                <ul>
+                    <li><a href="products.html?category=all">All groceries</a></li>
+                    <li><a href="products.html?category=dairy">Dairy</a></li>
+                    <li><a href="products.html?category=rice">Staples</a></li>
+                    <li><a href="categories.html">Categories</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3>Company</h3>
+                <ul>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="about.html">Delivery</a></li>
+                    <li><a href="about.html#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3>Subscribe</h3>
+                <p>Get daily fresh deals and offers.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2026 GALIYAN DAILY NEED. All rights reserved.</div>
+    </footer>
+
+    <script src="delivery.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

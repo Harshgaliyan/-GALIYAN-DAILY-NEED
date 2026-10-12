@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GALIYAN DAILY NEED | Products</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+<body>
+    <div class="topbar">
+        <div class="container">
+            <div class="delivery">
+                <i class="fas fa-location-dot"></i>
+                <span>Delivery in Bijnor and nearby areas · Free over ₹500</span>
+            </div>
+            <div class="social">
+                <i class="fas fa-phone"></i>
+                <a href="tel:+919897312151" style="color: white; text-decoration: none;">Call +91 9897312151</a>
+                <a href="https://wa.me/919897312151" target="_blank" rel="noopener noreferrer" style="color: white; text-decoration: none;">WhatsApp</a>
+            </div>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="container nav-wrap">
+            <div class="brand">
+                <div class="brand-icon"><i class="fas fa-shopping-basket"></i></div>
+                <div>
+                    <h1>GALIYAN</h1>
+                    <span>GALIYAN DAILY NEED</span>
+                </div>
+            </div>
+
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="categories.html">Categories</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="cart.html">Cart</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <div class="location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span data-delivery-location>Set delivery location</span>
+                </div>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search groceries" />
+                </div>
+                <button class="cart-button">
+                    <i class="fas fa-cart-shopping"></i>
+                    <span>Cart</span>
+                    <span class="badge" id="cartCount">0</span>
+                </button>
+                <button class="mobile-menu" id="navToggle" type="button" aria-label="Open navigation menu" aria-expanded="false"><i class="fas fa-bars" aria-hidden="true"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <section class="page-hero">
+        <div class="container">
+            <h1 id="pageTitle">Fresh Grocery Products</h1>
+            <p id="pageSubtitle">From fresh fruits to daily essentials. Product photos are illustrative; confirm current prices, stock, and delivery availability on <a href="https://wa.me/919897312151" target="_blank" rel="noopener noreferrer">WhatsApp</a>.</p>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="filter-bar">
+                <div class="chips" id="categoryFilter">
+                    <button class="chip" type="button" onclick="filterByCategory('all')">All</button>
+                    <button class="chip" type="button" onclick="filterByCategory('atta')">Atta</button>
+                    <button class="chip" type="button" onclick="filterByCategory('rice')">Rice</button>
+                    <button class="chip" type="button" onclick="filterByCategory('snacks')">Snacks &amp; Tea</button>
+                    <button class="chip" type="button" onclick="filterByCategory('chocolate')">Chocolates</button>
+                    <button class="chip" type="button" onclick="filterByCategory('dairy')">Dairy</button>
+                    <button class="chip" type="button" onclick="filterByCategory('beverages')">Tea &amp; Beverages</button>
+                    <button class="chip" type="button" onclick="filterByCategory('spices')">Spices &amp; Masala</button>
+                    <button class="chip" type="button" onclick="filterByCategory('oils')">Cooking Oils</button>
+                </div>
+                <div class="btn btn-primary">Sort: Popular</div>
+            </div>
+            <div class="product-brands" id="productBrands">
+                <strong id="brandTitle">Shop by brand · includes all categories</strong>
+                <div class="chips" id="brandFilter"></div>
+            </div>
+
+            <div class="product-grid" id="productGrid"></div>
+        </div>
+    </section>
+
+    <div class="login-modal" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="loginTitle" onclick="if (event.target === this) { this.classList.remove('is-open'); document.body.style.overflow = ''; }">
+        <div class="login-modal-content" onclick="event.stopPropagation()">
+            <button class="close-product-modal" type="button" aria-label="Close login form" onclick="document.getElementById('loginModal').classList.remove('is-open'); document.body.style.overflow = '';">&times;</button>
+            <h3 id="loginTitle">Login</h3>
+            <p>Please enter your name to continue.</p>
+            <form id="loginForm">
+                <label for="loginName">Your name</label>
+                <input id="loginName" name="name" type="text" placeholder="Enter your name" required />
+                <button type="submit" class="btn btn-primary">Continue</button>
+            </form>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div>
+                <h3>GALIYAN DAILY NEED</h3>
+                <p>Fresh groceries and daily essentials for Bijnor and nearby areas. Ask us to confirm delivery availability.</p>
+            </div>
+            <div>
+                <h3>Shop</h3>
+                <ul>
+                    <li><a href="products.html?category=all">All groceries</a></li>
+                    <li><a href="products.html?category=dairy">Dairy</a></li>
+                    <li><a href="products.html?category=rice">Staples</a></li>
+                    <li><a href="categories.html">Categories</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3>Company</h3>
+                <ul>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="about.html">Delivery</a></li>
+                    <li><a href="about.html#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3>Subscribe</h3>
+                <p>Get daily fresh deals and offers.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2026 GALIYAN DAILY NEED. All rights reserved.</div>
+    </footer>
+
+    <script src="delivery.js"></script>
+    <script src="script.js"></script>
+    <script>
+        const products = [
+            { id: 1, name: 'Aashirvaad Shudh Chakki Atta', brand: 'aashirvaad', category: 'atta', price: 285, meta: 'Whole Wheat • 5 Kg', icon: 'fas fa-wheat-awn', description: 'Premium chakki atta for soft rotis and parathas.' },
+            { id: 2, name: 'Fortune Chakki Fresh Atta', brand: 'fortune', category: 'atta', price: 265, meta: 'Whole Wheat • 5 Kg', icon: 'fas fa-wheat-awn', description: 'Fresh whole wheat flour with a smooth texture.' },
+            { id: 3, name: 'Pillsbury Chakki Fresh Atta', brand: 'pillsbury', category: 'atta', price: 275, meta: 'Whole Wheat • 5 Kg', icon: 'fas fa-wheat-awn', description: 'Tasty and wholesome atta for everyday meals.' },
+            { id: 4, name: 'Annapurna Premium Atta', brand: 'annapurna', category: 'atta', price: 250, meta: 'Whole Wheat • 5 Kg', icon: 'fas fa-wheat-awn', description: 'Nutritious wheat flour for soft, delicious rotis.' },
+            { id: 5, name: 'GALIYAN Premium Atta', brand: 'galiyan', category: 'atta', price: 245, meta: 'Whole Wheat • 5 Kg', icon: 'fas fa-wheat-awn', description: 'Premium quality whole wheat flour for daily cooking.' },
+            { id: 6, name: 'India Gate Premium Basmati Rice', brand: 'india-gate', category: 'rice', price: 220, meta: 'Long Grain • 1 Kg', icon: 'fas fa-bowl-rice', description: 'Long grain basmati rice with excellent aroma and taste.' },
+            { id: 7, name: 'Daawat Rozana Rice', brand: 'daawat', category: 'rice', price: 145, meta: 'Daily Rice • 1 Kg', icon: 'fas fa-bowl-rice', description: 'Affordable, tasty rice for everyday meals.' },
+            { id: 8, name: 'Fortune Everyday Rice', brand: 'fortune', category: 'rice', price: 125, meta: 'Fine Grain • 1 Kg', icon: 'fas fa-bowl-rice', description: 'Clean and delicious rice for family cooking.' },
+            { id: 9, name: 'GALIYAN Select Rice', brand: 'galiyan', category: 'rice', price: 98, meta: 'Fine Grain • 1 Kg', icon: 'fas fa-bowl-rice', description: 'Quality rice selected for everyday cooking.' },
+            { id: 10, name: 'Parle-G Biscuits', brand: 'parle', category: 'snacks', price: 35, meta: 'Family Pack • 250g', icon: 'fas fa-cookie-bite', description: 'Crispy and delicious biscuits perfect for tea time.' },
+            { id: 11, name: 'Haldiram Aloo Bhujia', brand: 'haldiram', category: 'snacks', price: 65, meta: 'Namkeen • 200g', icon: 'fas fa-seedling', description: 'Crispy potato namkeen snack for your tea time.' },
+            { id: 12, name: 'Tata Tea Gold', brand: 'tata', category: 'beverages', price: 145, meta: 'Tea Powder • 250g', icon: 'fas fa-mug-hot', description: 'Aromatic tea blend with authentic taste.' },
+            { id: 13, name: 'GALIYAN Masala Chai', brand: 'galiyan', category: 'beverages', price: 75, meta: 'Tea Powder • 250g', icon: 'fas fa-mug-hot', description: 'Aromatic masala tea blend with authentic spices.' },
+            { id: 14, name: 'Cadbury Dairy Milk', brand: 'cadbury', category: 'chocolate', price: 120, meta: 'Milk Chocolate • 110g', icon: 'fas fa-candy-cane', description: 'Smooth and delicious milk chocolate.' },
+            { id: 15, name: 'Nestle KitKat', brand: 'nestle', category: 'chocolate', price: 50, meta: 'Wafer Chocolate • 41g', icon: 'fas fa-candy-cane', description: 'Crispy wafer covered in delicious chocolate.' },
+            { id: 16, name: 'GALIYAN Chocolate Treat', brand: 'galiyan', category: 'chocolate', price: 95, meta: 'Kids Snacks • 250g', icon: 'fas fa-candy-cane', description: 'Delicious chocolate treats perfect for kids.' },
+            { id: 17, name: 'Amul Taaza Milk', brand: 'amul', category: 'dairy', price: 58, meta: 'Fresh Dairy • 1L', icon: 'fas fa-bottle-water', description: 'Fresh pasteurized milk delivered daily.' },
+            { id: 18, name: 'Mother Dairy Milk', brand: 'mother-dairy', category: 'dairy', price: 60, meta: 'Fresh Dairy • 1L', icon: 'fas fa-bottle-water', description: 'Fresh and nutritious milk for your family.' },
+            { id: 19, name: 'GALIYAN Fresh Milk', brand: 'galiyan', category: 'dairy', price: 55, meta: 'Fresh Dairy • 1L', icon: 'fas fa-bottle-water', description: 'Fresh milk delivered daily.' },
+            { id: 20, name: 'MDH Kitchen Masala', brand: 'mdh', category: 'spices', price: 75, meta: 'Cooking Mix • 250g', icon: 'fas fa-spoon', description: 'Authentic Indian kitchen masala blend.' },
+            { id: 21, name: 'Aashirvaad Sharbati Atta', brand: 'aashirvaad', category: 'atta', price: 315, meta: 'Whole Wheat • 5 Kg', icon: 'fas fa-wheat-awn', description: 'Sharbati wheat flour for everyday rotis.' },
+            { id: 22, name: 'Aashirvaad Multigrain Atta', brand: 'aashirvaad', category: 'atta', price: 335, meta: 'Multigrain • 5 Kg', icon: 'fas fa-wheat-awn', description: 'A multigrain flour blend for daily meals.' },
+            { id: 23, name: 'Pillsbury Gold Atta', brand: 'pillsbury', category: 'atta', price: 295, meta: 'Whole Wheat • 5 Kg', icon: 'fas fa-wheat-awn', description: 'Everyday whole wheat flour for soft rotis.' },
+            { id: 24, name: 'Pillsbury Multigrain Atta', brand: 'pillsbury', category: 'atta', price: 325, meta: 'Multigrain • 5 Kg', icon: 'fas fa-wheat-awn', description: 'A hearty multigrain flour for family cooking.' },
+            { id: 25, name: 'Annapurna Multigrain Atta', brand: 'annapurna', category: 'atta', price: 285, meta: 'Multigrain • 5 Kg', icon: 'fas fa-wheat-awn', description: 'Multigrain flour for wholesome everyday rotis.' },
+            { id: 26, name: 'Annapurna Chakki Atta', brand: 'annapurna', category: 'atta', price: 260, meta: 'Whole Wheat • 5 Kg', icon: 'fas fa-wheat-awn', description: 'Chakki-ground whole wheat flour.' },
+            { id: 27, name: 'Fortune Brown Rice', brand: 'fortune', category: 'rice', price: 155, meta: 'Brown Rice • 1 Kg', icon: 'fas fa-bowl-rice', description: 'Whole-grain rice for everyday meals.' },
+            { id: 28, name: 'Fortune Sunflower Oil', brand: 'fortune', category: 'oils', price: 165, meta: 'Refined Sunflower Oil • 1 L', icon: 'fas fa-bottle-droplet', description: 'Refined sunflower cooking oil for daily use.' },
+            { id: 29, name: 'GALIYAN Gold Basmati Rice', brand: 'galiyan', category: 'rice', price: 155, meta: 'Basmati Rice • 1 Kg', icon: 'fas fa-bowl-rice', description: 'Long-grain basmati rice for special meals.' },
+            { id: 30, name: 'GALIYAN Besan', brand: 'galiyan', category: 'spices', price: 95, meta: 'Gram Flour • 1 Kg', icon: 'fas fa-seedling', description: 'Gram flour for snacks and everyday recipes.' },
+            { id: 31, name: 'India Gate Classic Basmati Rice', brand: 'india-gate', category: 'rice', price: 185, meta: 'Classic Basmati • 1 Kg', icon: 'fas fa-bowl-rice', description: 'Aromatic basmati rice for family meals.' },
+            { id: 32, name: 'India Gate Dubar Basmati Rice', brand: 'india-gate', category: 'rice', price: 175, meta: 'Dubar Basmati • 1 Kg', icon: 'fas fa-bowl-rice', description: 'Everyday basmati rice with a pleasant aroma.' },
+            { id: 33, name: 'Daawat Super Basmati Rice', brand: 'daawat', category: 'rice', price: 195, meta: 'Basmati Rice • 1 Kg', icon: 'fas fa-bowl-rice', description: 'Long-grain basmati rice for biryani and pulao.' },
+            { id: 34, name: 'Daawat Brown Rice', brand: 'daawat', category: 'rice', price: 165, meta: 'Brown Rice • 1 Kg', icon: 'fas fa-bowl-rice', description: 'Whole-grain brown rice for everyday cooking.' },
+            { id: 35, name: 'Parle Monaco Classic Salted', brand: 'parle', category: 'snacks', price: 30, meta: 'Salted Crackers • 200g', icon: 'fas fa-cookie-bite', description: 'Crisp salted crackers for tea-time snacking.' },
+            { id: 36, name: 'Parle Hide & Seek', brand: 'parle', category: 'snacks', price: 40, meta: 'Chocolate Chip Cookies • 120g', icon: 'fas fa-cookie-bite', description: 'Chocolate chip cookies for a sweet snack.' },
+            { id: 37, name: 'Haldiram Moong Dal', brand: 'haldiram', category: 'snacks', price: 55, meta: 'Namkeen • 200g', icon: 'fas fa-seedling', description: 'Crunchy seasoned moong dal snack.' },
+            { id: 38, name: 'Haldiram Khatta Meetha', brand: 'haldiram', category: 'snacks', price: 60, meta: 'Namkeen Mix • 200g', icon: 'fas fa-seedling', description: 'Sweet and tangy namkeen mixture.' },
+            { id: 39, name: 'Tata Tea Premium', brand: 'tata', category: 'beverages', price: 125, meta: 'Tea Powder • 250g', icon: 'fas fa-mug-hot', description: 'Everyday black tea blend for a refreshing cup.' },
+            { id: 40, name: 'Tata Sampann Turmeric Powder', brand: 'tata', category: 'spices', price: 65, meta: 'Turmeric Powder • 100g', icon: 'fas fa-spoon', description: 'Ground turmeric for everyday cooking.' },
+            { id: 41, name: 'Cadbury 5 Star', brand: 'cadbury', category: 'chocolate', price: 30, meta: 'Chocolate Bar • 40g', icon: 'fas fa-candy-cane', description: 'Chewy caramel and nougat in a chocolate bar.' },
+            { id: 42, name: 'Cadbury Gems', brand: 'cadbury', category: 'chocolate', price: 20, meta: 'Candy-coated Chocolates • 22g', icon: 'fas fa-candy-cane', description: 'Colourful candy-coated chocolate treats.' },
+            { id: 43, name: 'Nestle Munch', brand: 'nestle', category: 'chocolate', price: 20, meta: 'Wafer Chocolate • 23g', icon: 'fas fa-candy-cane', description: 'Crispy wafer covered in milk chocolate.' },
+            { id: 44, name: 'Nestle Milkmaid', brand: 'nestle', category: 'dairy', price: 145, meta: 'Sweetened Condensed Milk • 380g', icon: 'fas fa-bottle-water', description: 'Sweetened condensed milk for desserts and baking.' },
+            { id: 45, name: 'Amul Butter', brand: 'amul', category: 'dairy', price: 58, meta: 'Pasteurised Butter • 100g', icon: 'fas fa-cube', description: 'Creamy table butter for meals and snacks.' },
+            { id: 46, name: 'Amul Processed Cheese', brand: 'amul', category: 'dairy', price: 125, meta: 'Cheese • 200g', icon: 'fas fa-cheese', description: 'Processed cheese for sandwiches and cooking.' },
+            { id: 47, name: 'Mother Dairy Classic Curd', brand: 'mother-dairy', category: 'dairy', price: 35, meta: 'Curd • 400g', icon: 'fas fa-bottle-water', description: 'Fresh curd for everyday meals.' },
+            { id: 48, name: 'Mother Dairy Paneer', brand: 'mother-dairy', category: 'dairy', price: 95, meta: 'Paneer • 200g', icon: 'fas fa-cheese', description: 'Fresh paneer for curries and snacks.' },
+            { id: 49, name: 'MDH Garam Masala', brand: 'mdh', category: 'spices', range: 'Popular Blended Masalas', price: 82, meta: 'Garam Masala • 100g', icon: 'fas fa-spoon', description: 'Aromatic blended masala for curries and everyday cooking.' },
+            { id: 50, name: 'MDH Kitchen King Masala', brand: 'mdh', category: 'spices', range: 'Popular Blended Masalas', price: 78, meta: 'Mixed Masala • 100g', icon: 'fas fa-spoon', description: 'Versatile spice blend for vegetable dishes and curries.' },
+            { id: 51, name: 'MDH Chicken Masala', brand: 'mdh', category: 'spices', range: 'Meat & Poultry Masalas', price: 78, meta: 'Chicken Masala • 100g', icon: 'fas fa-drumstick-bite', description: 'Seasoning blend for chicken recipes.' },
+            { id: 52, name: 'MDH Meat Masala', brand: 'mdh', category: 'spices', range: 'Meat & Poultry Masalas', price: 82, meta: 'Meat Masala • 100g', icon: 'fas fa-drumstick-bite', description: 'Spice blend for meat curries and gravies.' },
+            { id: 53, name: 'MDH Kashmiri Mirch Powder', brand: 'mdh', category: 'spices', range: 'Pure Spices & Powders', price: 68, meta: 'Chilli Powder • 100g', icon: 'fas fa-pepper-hot', description: 'Ground chilli powder for colour and mild heat.' },
+            { id: 54, name: 'MDH Haldi Powder', brand: 'mdh', category: 'spices', range: 'Pure Spices & Powders', price: 55, meta: 'Turmeric Powder • 100g', icon: 'fas fa-spoon', description: 'Ground turmeric spice for everyday recipes.' },
+            { id: 55, name: 'MDH Chana Masala', brand: 'mdh', category: 'spices', range: 'Specialty & Miscellaneous Items', price: 68, meta: 'Chana Masala • 100g', icon: 'fas fa-seedling', description: 'Seasoning blend for chickpea curries.' },
+            { id: 56, name: 'MDH Chunky Chat Masala', brand: 'mdh', category: 'spices', range: 'Specialty & Miscellaneous Items', price: 62, meta: 'Chaat Masala • 100g', icon: 'fas fa-spoon', description: 'Tangy seasoning for fruit, snacks and chaat.' }
+        ];
+
+        const brandNames = {
+            aashirvaad: 'Aashirvaad',
+            fortune: 'Fortune',
+            pillsbury: 'Pillsbury',
+            annapurna: 'Annapurna',
+            galiyan: 'GALIYAN',
+            'india-gate': 'India Gate',
+            daawat: 'Daawat',
+            parle: 'Parle',
+            haldiram: 'Haldiram',
+            tata: 'Tata',
+            cadbury: 'Cadbury',
+            nestle: 'Nestle',
+            amul: 'Amul',
+            'mother-dairy': 'Mother Dairy',
+            mdh: 'MDH'
+        };
+
+        const categoryImages = {
+            atta: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80',
+            rice: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=800&q=80',
+            snacks: 'img/biscuiticon.webp',
+            chocolate: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=800&q=80',
+            dairy: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=800&q=80',
+            beverages: 'img/TATA-Consumers.jpg',
+            spices: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=800&q=80',
+            oils: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=800&q=80'
+        };
+
+        const productImages = {
+            1: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=900&q=85',
+            2: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=900&q=85',
+            3: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=900&q=85',
+            4: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=900&q=85',
+            5: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=900&q=85',
+            6: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=900&q=85',
+            7: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=900&q=85',
+            8: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=900&q=85',
+            9: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=900&q=85',
+            10: 'img/biscuiticon.webp',
+            11: 'img/hal.jpg',
+            12: 'img/TATA-Consumers.jpg',
+            13: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=900&q=85',
+            14: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=900&q=85',
+            15: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=900&q=85',
+            16: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=900&q=85',
+            17: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=900&q=85',
+            18: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=900&q=85',
+            19: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=900&q=85',
+            20: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=900&q=85'
+        };
+
+        let currentCategory = 'all';
+        let currentBrand = 'all';
+        let currentSearch = '';
+
+        function renderBrandFilters() {
+            const brandFilter = document.getElementById('brandFilter');
+            if (!brandFilter) return;
+
+            const brands = [...new Set(products.map(product => product.brand))]
+                .sort((first, second) => (brandNames[first] || first).localeCompare(brandNames[second] || second));
+            brandFilter.innerHTML = [
+                '<button type="button" class="chip brand-chip active" onclick="filterByBrand(\'all\', this)">All brands</button>',
+                ...brands.map(brand => {
+                    const count = products.filter(product => product.brand === brand).length;
+                    return `<button type="button" class="chip brand-chip" onclick="filterByBrand('${brand}', this)">${brandNames[brand] || brand} <span class="brand-count">${count}</span></button>`;
+                })
+            ].join('');
+        }
+
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function filterByCategory(category) {
+            const validCategories = ['all', ...new Set(products.map(product => product.category))];
+            currentCategory = validCategories.includes(category) ? category : 'all';
+            currentBrand = 'all';
+            const pageTitle = document.getElementById('pageTitle');
+            const pageSubtitle = document.getElementById('pageSubtitle');
+            renderBrandFilters();
+            
+            if (currentCategory === 'all') {
+                pageTitle.textContent = 'Fresh Grocery Products';
+                pageSubtitle.textContent = 'From fresh fruits to daily essentials, find everything you need for your home.';
+            } else {
+                const categoryNames = {
+                    'atta': 'Atta & Grain',
+                    'rice': 'Rice & Staples',
+                    'snacks': 'Biscuits & Snacks',
+                    'chocolate': 'Chocolates & Sweets',
+                    'dairy': 'Dairy Products',
+                    'beverages': 'Tea & Beverages',
+                    'spices': 'Spices & Masala',
+                    'oils': 'Cooking Oils'
+                };
+                pageTitle.textContent = categoryNames[currentCategory] || 'Products';
+                pageSubtitle.textContent = 'Explore our collection of ' + (categoryNames[currentCategory] || 'products').toLowerCase();
+            }
+            
+            renderProducts();
+        }
+
+        function filterByBrand(brand, selectedChip) {
+            const validBrands = new Set(products.map(product => product.brand));
+            if (brand !== 'all' && !validBrands.has(brand)) return;
+
+            currentBrand = brand;
+            currentCategory = 'all';
+            document.querySelectorAll('.brand-chip').forEach(chip => chip.classList.remove('active'));
+            const activeChip = selectedChip || document.querySelector(`.brand-chip[onclick="filterByBrand('${brand}', this)"]`);
+            if (activeChip) activeChip.classList.add('active');
+            const pageTitle = document.getElementById('pageTitle');
+            const pageSubtitle = document.getElementById('pageSubtitle');
+
+            if (brand !== 'all') {
+                const brandName = brandNames[brand] || brand;
+                pageTitle.textContent = brandName + ' products';
+                pageSubtitle.textContent = `Showing all ${products.filter(product => product.brand === brand).length} ${brandName} products across every category.`;
+            } else {
+                pageTitle.textContent = 'Fresh Grocery Products';
+                pageSubtitle.textContent = 'From fresh fruits to daily essentials, find everything you need for your home.';
+            }
+
+            renderProducts();
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('productGrid');
+            const searchTerm = currentSearch.trim().toLowerCase();
+            const filtered = products.filter(product => {
+                const matchesCategory = currentCategory === 'all' || product.category === currentCategory;
+                const matchesBrand = currentBrand === 'all' || product.brand === currentBrand;
+                const matchesSearch = !searchTerm || product.name.toLowerCase().includes(searchTerm) || product.description.toLowerCase().includes(searchTerm) || product.meta.toLowerCase().includes(searchTerm) || (product.range || '').toLowerCase().includes(searchTerm) || (brandNames[product.brand] || product.brand).toLowerCase().includes(searchTerm);
+                return matchesCategory && matchesBrand && matchesSearch;
+            });
+            
+            if (!filtered.length) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1; background: #fff; padding: 2rem; border-radius: 12px; box-shadow: 0 12px 26px rgba(0,0,0,.06); text-align: center;">
+                        <h3>No products found</h3>
+                        <p>Try another keyword or choose a different category.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = filtered.map(product => `
+                <article class="product-card" onclick="showProductDetail(${product.id})" style="cursor: pointer;" data-pack-image="${[11, 12, 13].includes(product.id)}">
+                    <div class="product-image">
+                        <img src="${product.image || productImages[product.id] || categoryImages[product.category]}" alt="${product.name}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='${categoryImages[product.category]}';">
+                        <i class="${product.icon}" style="display: none;"></i>
+                    </div>
+                    <div class="product-body">
+                        ${product.range ? `<div class="product-range">${product.range}</div>` : ''}
+                        <h3>${product.name}</h3>
+                        <div class="meta">${product.meta}</div>
+                        <div class="product-row">
+                            <span class="price">₹${product.price}</span>
+                            <button class="add-cart" onclick="event.stopPropagation(); addToCart('${product.name}', ${product.price}, '${product.image || productImages[product.id] || categoryImages[product.category]}')" data-label="Add to Cart">Add to Cart</button>
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        function showProductDetail(productId) {
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                alert(`${product.name}${product.range ? `\n${product.range}` : ''}\n\nPrice: ₹${product.price}\n\n${product.description}\n\n${product.meta}`);
+            }
+        }
+
+        function getUserName() {
+            try {
+                const user = JSON.parse(localStorage.getItem('galiyan-user') || 'null');
+                return user && user.name ? user.name : '';
+            } catch (error) {
+                return '';
+            }
+        }
+
+        function openLoginModal(action) {
+            const modal = document.getElementById('loginModal');
+            if (!modal) return;
+            window.galiyanPendingAction = action || null;
+            modal.classList.add('is-open');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => {
+                const field = document.getElementById('loginName');
+                if (field) field.focus();
+            }, 50);
+        }
+
+        function closeLoginModal() {
+            const modal = document.getElementById('loginModal');
+            if (!modal) return;
+            modal.classList.remove('is-open');
+            document.body.style.overflow = '';
+        }
+
+        function addToCart(name, price, image) {
+            const CART_KEY = 'galiyan-cart';
+            try {
+                const cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+                const existing = cart.find(item => item.name === name);
+                
+                if (existing) {
+                    existing.qty += 1;
+                    existing.image = image || existing.image;
+                } else {
+                    cart.push({ name, price, qty: 1, image });
+                }
+                
+                localStorage.setItem(CART_KEY, JSON.stringify(cart));
+                const cartCount = document.getElementById('cartCount');
+                if (cartCount) {
+                    cartCount.textContent = cart.reduce((count, item) => count + Number(item.qty || 0), 0);
+                }
+            } catch (e) {
+                alert('Unable to add this product to your cart. Please check your browser storage and try again.');
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const category = getQueryParam('category');
+            const brand = getQueryParam('brand');
+            currentSearch = decodeURIComponent(getQueryParam('search') || '').trim();
+            if (category) {
+                currentCategory = category;
+            }
+            filterByCategory(currentCategory);
+            if (brand) {
+                filterByBrand(brand);
+            }
+            if (currentSearch) {
+                const title = document.getElementById('pageTitle');
+                const subtitle = document.getElementById('pageSubtitle');
+                title.textContent = 'Search results';
+                subtitle.textContent = `Showing items for "${currentSearch}"`;
+            }
+
+        });
+    </script>
+</body>
+</html>

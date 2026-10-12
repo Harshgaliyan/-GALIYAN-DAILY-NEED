@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GALIYAN DAILY NEED - Grocery Store</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: #ffd700;
+        }
+
+        .cart-icon {
+            position: relative;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(90deg, rgba(18, 47, 38, .86), rgba(18, 47, 38, .24)), url('https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=1800&q=85');
+            background-size: cover;
+            background-position: center 55%;
+            min-height: 620px;
+            height: 68vh;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            text-align: left;
+            color: white;
+            margin-top: 80px;
+            padding: 70px 8%;
+        }
+
+        .hero-content {
+            max-width: 650px;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .hero-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 28px;
+        }
+
+        .hero-categories span {
+            padding: 9px 15px;
+            border: 1px solid rgba(255, 255, 255, .55);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .14);
+            backdrop-filter: blur(5px);
+            font-size: .9rem;
+            font-weight: 700;
+        }
+
+        .brand-logos [data-brand] {
+            cursor: pointer;
+            transition: background .2s ease, transform .2s ease;
+        }
+
+        .brand-logos [data-brand]:hover,
+        .brand-logos [data-brand]:focus-visible {
+            background: #eaf5e9;
+            transform: translateY(-2px);
+        }
+
+        .cta-button {
+            background: #ff6b35;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            background: #e55a2b;
+            transform: translateY(-2px);
+        }
+
+        .cta-button.secondary {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            margin-left: 0.75rem;
+        }
+
+        .cta-button.secondary:hover {
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        /* Categories */
+        .categories {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #333;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .category-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .category-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .category-icon img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        .brand-label {
+            margin-top: .7rem;
+            color: #6c7b76;
+            font-size: .78rem;
+            font-weight: 800;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+        }
+
+        .brand-logos {
+            display: flex;
+            justify-content: center;
+            gap: .55rem;
+            flex-wrap: wrap;
+            margin-top: .7rem;
+        }
+
+        .brand-logos span {
+            display: inline-flex;
+            align-items: center;
+            gap: .3rem;
+            padding: .3rem .5rem;
+            border: 1px solid #e5ece8;
+            border-radius: 999px;
+            background: #f8fbf8;
+            color: #24483e;
+            font-size: .72rem;
+            font-weight: 700;
+        }
+
+        .brand-logos span::before {
+            content: attr(data-initial);
+            display: inline-grid;
+            width: 20px;
+            height: 20px;
+            flex: 0 0 20px;
+            place-items: center;
+            border-radius: 50%;
+            background: #e4efe8;
+            color: #24483e;
+            font-size: .62rem;
+            font-weight: 900;
+        }
+
+        .category-card:nth-child(1) .category-icon { color: #ff6b35; }
+        .category-card:nth-child(2) .category-icon { color: #40c057; }
+        .category-card:nth-child(3) .category-icon { color: #17a2b8; }
+        .category-card:nth-child(4) .category-icon { color: #6f42c1; }
+
+        /* Products */
+        .products {
+            padding: 4rem 2rem;
+            background: #f8f9fa;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            height: 200px;
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: white;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-image img.product-pack-image {
+            object-fit: contain;
+            padding: 12px;
+            background: #fff;
+        }
+
+        .product-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            margin-bottom: .55rem;
+            color: #547067;
+            font-size: .78rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+
+        .brand-mark {
+            display: inline-grid;
+            width: 20px;
+            height: 20px;
+            flex: 0 0 20px;
+            place-items: center;
+            border-radius: 50%;
+            background: #e4efe8;
+            color: #24483e;
+            font-size: .6rem;
+            font-weight: 900;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ff6b35;
+            margin-bottom: 1rem;
+        }
+
+        .product-weight {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .add-to-cart:hover {
+            background: #e55a2b;
+        }
+
+        .product-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 3000;
+            padding: 24px;
+            background: rgba(9, 35, 28, .7);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-modal.is-open {
+            display: flex;
+        }
+
+        .product-modal-content {
+            position: relative;
+            width: min(920px, 100%);
+            max-height: 92vh;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: minmax(260px, .9fr) minmax(280px, 1.1fr);
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, .28);
+        }
+
+        .product-modal-image {
+            min-height: 360px;
+            background: #eff8f1;
+        }
+
+        .product-modal-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-modal-info {
+            padding: 42px 36px 34px;
+        }
+
+        .product-modal-info h2 {
+            margin: 8px 0;
+            color: #173f35;
+        }
+
+        .product-modal-info .modal-price {
+            color: #e86b2d;
+            font-size: 1.6rem;
+            font-weight: 800;
+        }
+
+        .product-modal-info p {
+            color: #60756e;
+            margin: 12px 0 22px;
+        }
+
+        .contact-form {
+            display: grid;
+            gap: 12px;
+        }
+
+        .contact-form label {
+            color: #24483e;
+            font-size: .85rem;
+            font-weight: 800;
+        }
+
+        .contact-form input,
+        .contact-form select,
+        .contact-form textarea {
+            width: 100%;
+            border: 1px solid #d8e6df;
+            border-radius: 9px;
+            padding: 12px 13px;
+            font: inherit;
+        }
+
+        .contact-form textarea {
+            min-height: 82px;
+            resize: vertical;
+        }
+
+        .contact-form button {
+            border: 0;
+            border-radius: 9px;
+            padding: 13px;
+            background: #173f35;
+            color: white;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .close-product-modal {
+            position: absolute;
+            top: 12px;
+            right: 14px;
+            width: 36px;
+            height: 36px;
+            border: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .9);
+            color: #173f35;
+            font-size: 1.4rem;
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        .delivery-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 3200;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(9, 35, 28, .72);
+        }
+
+        .delivery-modal.is-open {
+            display: flex;
+        }
+
+        .delivery-content {
+            position: relative;
+            width: min(520px, 100%);
+            max-height: calc(100vh - 48px);
+            overflow-y: auto;
+            padding: 34px;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, .28);
+        }
+
+        .delivery-content h2 {
+            color: #173f35;
+            margin-bottom: 6px;
+        }
+
+        .delivery-content > p {
+            color: #60756e;
+            margin-bottom: 20px;
+        }
+
+        .delivery-details {
+            padding: 14px 16px;
+            margin: 12px 16px 18px;
+            border-radius: 10px;
+            background: #f4fbf1;
+            color: #31584b;
+            font-size: .9rem;
+        }
+
+        .delivery-details:empty {
+            display: none;
+        }
+
+        @media (max-width: 680px) {
+            .product-modal-content {
+                grid-template-columns: 1fr;
+            }
+
+            .product-modal-image {
+                min-height: 220px;
+                max-height: 260px;
+            }
+
+            .product-modal-info {
+                padding: 28px 22px 24px;
+            }
+        }
+
+        /* Cart Modal */
+        .cart-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+        }
+
+        .cart-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 15px;
+        }
+
+        .cart-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-cart {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .cart-items {
+            padding: 1rem;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item-image {
+            width: 60px;
+            height: 60px;
+            background: #ff6b35;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-total {
+            padding: 1.5rem;
+            border-top: 1px solid #eee;
+            text-align: center;
+        }
+
+        .total-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ff6b35;
+            margin-bottom: 1rem;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        .checkout-btn:hover {
+            background: #218838;
+        }
+
+        .home-menu-toggle {
+            display: none;
+            border: 1px solid rgba(255, 255, 255, .45);
+            border-radius: 10px;
+            padding: .55rem .7rem;
+            background: transparent;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .product-card:focus-visible,
+        .category-card:focus-visible,
+        .cart-icon:focus-visible,
+        .home-menu-toggle:focus-visible,
+        button:focus-visible,
+        a:focus-visible {
+            outline: 3px solid #f4bb46;
+            outline-offset: 3px;
+        }
+
+        .product-image {
+            height: 220px;
+            overflow: hidden;
+            background: #f4f7f2;
+        }
+
+        .product-image img {
+            transition: transform .35s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.04);
+        }
+
+        .product-info {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+        }
+
+        button.product-title {
+            width: fit-content;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            color: inherit;
+            font: inherit;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        button.product-title:hover {
+            color: #24483e;
+            text-decoration: underline;
+        }
+
+        .product-weight {
+            flex: 1;
+        }
+
+        .nav-container {
+            min-height: 80px;
+            max-width: 1240px;
+        }
+
+        .logo {
+            font-size: clamp(1rem, 2vw, 1.45rem);
+        }
+
+        .hero {
+            min-height: 560px;
+            height: min(68vh, 720px);
+            margin-top: 80px;
+            background-position: center 55%;
+        }
+
+        .hero-content h1 {
+            max-width: 650px;
+            font-size: clamp(2.5rem, 5vw, 4.25rem);
+            line-height: 1.08;
+        }
+
+        .hero-content p {
+            max-width: 560px;
+        }
+
+        .category-card {
+            color: #24483e;
+        }
+
+        .category-card h3 {
+            margin-top: .8rem;
+        }
+
+        .products-grid {
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 245px), 1fr));
+            max-width: 1240px;
+        }
+
+        .product-card {
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .cart-icon {
+            border: 0;
+            background: transparent;
+            color: white;
+        }
+
+        .cart-modal.is-open {
+            display: block;
+        }
+
+        .cart-subtotal-label {
+            margin-bottom: .35rem;
+            color: #64756f;
+            font-size: .85rem;
+        }
+
+        @media (max-width: 900px) {
+            .nav-container {
+                padding: 0 1.25rem;
+            }
+
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 80px;
+                left: 1rem;
+                right: 1rem;
+                flex-direction: column;
+                gap: 0;
+                padding: .5rem 1rem;
+                border-radius: 14px;
+                background: #173f35;
+                box-shadow: 0 14px 35px rgba(0, 0, 0, .22);
+            }
+
+            .nav-menu.is-open {
+                display: flex;
+            }
+
+            .nav-menu a {
+                display: block;
+                padding: .8rem .4rem;
+            }
+
+            .home-menu-toggle {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .hero {
+                height: auto;
+                min-height: 500px;
+                padding: 60px 6%;
+            }
+        }
+
+        @media (max-width: 620px) {
+            .nav-container {
+                padding: 0 .9rem;
+                gap: .6rem;
+            }
+
+            .logo {
+                max-width: 65%;
+                line-height: 1.2;
+            }
+
+            .logo i {
+                font-size: 1.5rem;
+            }
+
+            .hero {
+                min-height: 480px;
+                margin-top: 80px;
+                padding: 48px 1.25rem;
+            }
+
+            .hero-content h1 {
+                font-size: clamp(2.2rem, 10vw, 3rem);
+            }
+
+            .hero-content p {
+                font-size: 1rem;
+            }
+
+            .cta-button.secondary {
+                margin: .75rem 0 0;
+            }
+
+            .categories,
+            .products {
+                padding: 3rem 1rem;
+            }
+
+            .category-grid,
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .section-title {
+                margin-bottom: 1.75rem;
+                font-size: 1.8rem;
+            }
+
+            .cart-content {
+                width: calc(100% - 24px);
+                max-height: 88vh;
+            }
+
+            .delivery-content {
+                padding: 28px 20px;
+            }
+        }
+
+        /* Footer */
+        .footer {
+            background: #333;
+            color: white;
+            padding: 3rem 2rem 1rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: #ff6b35;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #555;
+            color: #aaa;
+        }
+
+        /* Responsive */
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <a class="logo" href="index.html" aria-label="GALIYAN Daily Need home" style="color: inherit; text-decoration: none;">
+                <i class="fas fa-shopping-basket"></i>
+                GALIYAN DAILY NEED
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html" aria-current="page">Home</a></li>
+                <li><a href="categories.html">Categories</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="cart.html">Cart</a></li>
+            </ul>
+            <button class="home-menu-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" onclick="toggleHomeMenu()">
+                <i class="fas fa-bars" aria-hidden="true"></i>
+            </button>
+            <button class="cart-icon" type="button" aria-label="Open shopping cart" aria-haspopup="dialog" aria-controls="cartModal" onclick="toggleCart()">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Fresh groceries, right on time.</h1>
+            <p>Shop everyday essentials, pantry favourites and tasty treats. We serve Bijnor and nearby areas; delivery coverage, stock, and final prices are confirmed with you on WhatsApp.</p>
+            <a href="#products" class="cta-button">Shop Now</a>
+            <a class="cta-button secondary" href="https://wa.me/919897312151?text=Hello%20GALIYAN%20DAILY%20NEED%2C%20please%20confirm%20delivery%20availability%20in%20my%20area." target="_blank" rel="noopener noreferrer">Check delivery area</a>
+            <div class="hero-categories" aria-label="Popular grocery categories">
+                <span>Atta &amp; Flour</span>
+                <span>Rice &amp; Staples</span>
+                <span>Snacks</span>
+                <span>Chocolates</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="categories" id="categories">
+        <h2 class="section-title">Shop by Category</h2>
+        <div class="category-grid">
+            <a href="products.html?category=atta" class="category-card" style="text-decoration: none; color: inherit;">
+                <div class="category-icon" >
+                    <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=900&q=85" alt="Fresh wheat flour and atta" loading="lazy" decoding="async" />
+                    <!-- <i class="fas fa-wheat-awn"></i> -->
+                </div>
+                <h3>Atta & Grain</h3>
+                <div class="brand-label">Popular brands</div>
+                <div class="brand-logos">
+                    <span data-initial="A" data-brand="aashirvaad" role="link" tabindex="0">Aashirvaad</span>
+                    <span data-initial="F" data-brand="fortune" role="link" tabindex="0">Fortune</span>
+                    <span data-initial="P" data-brand="pillsbury" role="link" tabindex="0">Pillsbury</span>
+                </div>
+            </a>
+            <a href="products.html?category=rice" class="category-card" style="text-decoration: none; color: inherit;">
+                <div class="category-icon">
+                    <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=900&q=85" alt="Rice grains" loading="lazy" decoding="async" />
+                    <!-- <i class="fas fa-bread-slice"></i> -->
+                </div>
+                <h3>Rice & Staples</h3>
+                <div class="brand-label">Popular brands</div>
+                <div class="brand-logos">
+                    <span data-initial="IG" data-brand="india-gate" role="link" tabindex="0">India Gate</span>
+                    <span data-initial="D" data-brand="daawat" role="link" tabindex="0">Daawat</span>
+                    <span data-initial="F" data-brand="fortune" role="link" tabindex="0">Fortune</span>
+                </div>
+            </a>
+            <a href="products.html?category=snacks" class="category-card" style="text-decoration: none; color: inherit;">
+                <div class="category-icon">
+                    <!-- <i class="fas fa-cookie-bite"></i> -->
+                      <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=900&q=85" alt="Fresh biscuits and snacks" loading="lazy" decoding="async" />
+                </div>
+                <h3>Biscuits & Snacks</h3>
+                <div class="brand-label">Popular brands</div>
+                <div class="brand-logos">
+                    <span data-initial="P" data-brand="parle" role="link" tabindex="0">Parle</span>
+                    <span data-initial="H" data-brand="haldiram" role="link" tabindex="0">Haldiram</span>
+                    <span data-initial="T" data-brand="tata" role="link" tabindex="0">Tata</span>
+                </div>
+            </a>
+            <a href="products.html?category=chocolate" class="category-card" style="text-decoration: none; color: inherit;">
+                <div class="category-icon">
+                    <img src="https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=900&q=85" alt="Chocolate sweets" loading="lazy" decoding="async" />
+                </div>
+                <h3>Chocolates & Sweets</h3>
+                <div class="brand-label">Popular brands</div>
+                <div class="brand-logos">
+                    <span data-initial="C" data-brand="cadbury" role="link" tabindex="0">Cadbury</span>
+                    <span data-initial="N" data-brand="nestle" role="link" tabindex="0">Nestle</span>
+                    <span data-initial="G" data-brand="galiyan" role="link" tabindex="0">GALIYAN</span>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Products -->
+    <section class="products" id="products">
+        <div class="categories">
+            <h2 class="section-title">Popular Products</h2>
+            <p class="product-disclaimer">Product photos are illustrative. Please confirm current price and availability with us on <a href="https://wa.me/919897312151" target="_blank" rel="noopener noreferrer">WhatsApp</a> before ordering.</p>
+            <div class="products-grid">
+                <div class="product-card" onclick="openProductPopup('Aashirvaad Shudh Chakki Atta', '₹285/5 kg', 'Whole Wheat Flour', 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=900&q=85')">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=900&q=85" alt="Aashirvaad whole wheat atta" loading="lazy" decoding="async">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-brand"><span class="brand-mark" aria-hidden="true">A</span>Aashirvaad</div>
+                        <button class="product-title" type="button" onclick="event.stopPropagation(); openProductPopup('Aashirvaad Shudh Chakki Atta', '₹285/5 kg', 'Whole wheat • 5 kg', 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=900&q=85')">Aashirvaad Shudh Chakki Atta</button>
+                        <div class="product-price">₹285/5 kg</div>
+                        <div class="product-weight">Whole wheat • 5 kg</div>
+                        <button class="add-to-cart" onclick="event.stopPropagation(); addToCart('Aashirvaad Shudh Chakki Atta', 285, 'atta', 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=900&q=85')">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="openProductPopup('India Gate Premium Basmati Rice', '₹220/kg', 'Long Grain • 1 kg', 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=900&q=85')">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=900&q=85" alt="India Gate basmati rice" loading="lazy" decoding="async">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-brand"><span class="brand-mark" aria-hidden="true">IG</span>India Gate</div>
+                        <button class="product-title" type="button" onclick="event.stopPropagation(); openProductPopup('India Gate Premium Basmati Rice', '₹220/kg', 'Long grain • 1 kg', 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=900&q=85')">India Gate Premium Basmati Rice</button>
+                        <div class="product-price">₹220/kg</div>
+                        <div class="product-weight">Long grain • 1 kg</div>
+                        <button class="add-to-cart" onclick="event.stopPropagation(); addToCart('India Gate Premium Basmati Rice', 220, 'rice', 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=900&q=85')">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="openProductPopup('Parle-G Biscuits', '₹35/250 g', 'Family pack • 250 g', 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=900&q=85')">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=900&q=85" alt="Parle biscuits" loading="lazy" decoding="async">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-brand"><span class="brand-mark" aria-hidden="true">P</span>Parle</div>
+                        <button class="product-title" type="button" onclick="event.stopPropagation(); openProductPopup('Parle-G Biscuits', '₹35/250 g', 'Family pack • 250 g', 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=900&q=85')">Parle-G Biscuits</button>
+                        <div class="product-price">₹35/250 g</div>
+                        <div class="product-weight">Family pack • 250 g</div>
+                        <button class="add-to-cart" onclick="event.stopPropagation(); addToCart('Parle-G Biscuits', 35, 'snacks', 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=900&q=85')">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="openProductPopup('Cadbury Dairy Milk', '₹120/110 g', 'Milk chocolate • 110 g', 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=900&q=85')">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=900&q=85" alt="Cadbury chocolate" loading="lazy" decoding="async">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-brand"><span class="brand-mark" aria-hidden="true">C</span>Cadbury</div>
+                        <button class="product-title" type="button" onclick="event.stopPropagation(); openProductPopup('Cadbury Dairy Milk', '₹120/110 g', 'Milk chocolate • 110 g', 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=900&q=85')">Cadbury Dairy Milk</button>
+                        <div class="product-price">₹120/110 g</div>
+                        <div class="product-weight">Milk chocolate • 110 g</div>
+                        <button class="add-to-cart" onclick="event.stopPropagation(); addToCart('Cadbury Dairy Milk', 120, 'chocolate', 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=900&q=85')">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="openProductPopup('Haldiram Aloo Bhujia', '₹65/200 g', 'Namkeen • 200 g', 'img/hal.jpg')">
+                    <div class="product-image">
+                        <img class="product-pack-image" src="img/hal.jpg" alt="Haldiram namkeen assortment including Aloo Bhujia" loading="lazy" decoding="async">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-brand"><span class="brand-mark" aria-hidden="true">H</span>Haldiram Snacks</div>
+                        <button class="product-title" type="button" onclick="event.stopPropagation(); openProductPopup('Haldiram Aloo Bhujia', '₹65/200 g', 'Namkeen • 200 g', 'img/hal.jpg')">Haldiram Aloo Bhujia</button>
+                        <div class="product-price">₹65/200 g</div>
+                        <div class="product-weight">Namkeen • 200 g</div>
+                        <button class="add-to-cart" onclick="event.stopPropagation(); addToCart('Haldiram Aloo Bhujia', 65, 'snacks', 'img/hal.jpg')">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="openProductPopup('Tata Tea Gold', '₹145/250 g', 'Tea powder • 250 g', 'img/TATA-Consumers.jpg')">
+                    <div class="product-image">
+                        <img class="product-pack-image" src="img/TATA-Consumers.jpg" alt="Tata tea range including Tata Tea Gold" loading="lazy" decoding="async">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-brand"><span class="brand-mark" aria-hidden="true">T</span>Tata</div>
+                        <button class="product-title" type="button" onclick="event.stopPropagation(); openProductPopup('Tata Tea Gold', '₹145/250 g', 'Tea powder • 250 g', 'img/TATA-Consumers.jpg')">Tata Tea Gold</button>
+                        <div class="product-price">₹145/250 g</div>
+                        <div class="product-weight">Tea powder • 250 g</div>
+                        <button class="add-to-cart" onclick="event.stopPropagation(); addToCart('Tata Tea Gold', 145, 'tea', 'img/TATA-Consumers.jpg')">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Detail Modal -->
+    <div class="product-modal" id="productModal" role="dialog" aria-modal="true" aria-labelledby="modalProductName" onclick="closeProductPopup(event)">
+        <div class="product-modal-content" onclick="event.stopPropagation()">
+            <button class="close-product-modal" type="button" aria-label="Close product details" onclick="closeProductPopup()">&times;</button>
+            <div class="product-modal-image">
+                <img id="modalProductImage" alt="">
+            </div>
+            <div class="product-modal-info">
+                <div class="product-brand">Product details</div>
+                <h2 id="modalProductName">Product</h2>
+                <div class="modal-price" id="modalProductPrice"></div>
+                <p id="modalProductMeta"></p>
+                <form class="contact-form" id="productContactForm">
+                    <label for="contactName">Your name</label>
+                    <input id="contactName" name="name" type="text" placeholder="Enter your name" required>
+                    <label for="contactPhone">Phone number</label>
+                    <input id="contactPhone" name="phone" type="tel" placeholder="Enter your phone number" required>
+                    <label for="contactMessage">Message</label>
+                    <textarea id="contactMessage" name="message" placeholder="Ask about this product or delivery"></textarea>
+                    <button type="submit">Send enquiry</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- First-order Delivery Details -->
+    <div class="delivery-modal" id="deliveryModal" role="dialog" aria-modal="true" aria-labelledby="deliveryTitle" onclick="closeDeliveryPopup(event)">
+        <div class="delivery-content" onclick="event.stopPropagation()">
+            <button class="close-product-modal" type="button" aria-label="Close delivery form" onclick="closeDeliveryPopup()">&times;</button>
+            <h2 id="deliveryTitle">Add delivery details</h2>
+            <p>We currently serve Bijnor and nearby areas. We will confirm coverage for your exact address when you send your order request on WhatsApp.</p>
+            <form class="contact-form" id="deliveryForm" data-delivery-form>
+                <label for="deliveryName">Full name</label>
+                <input id="deliveryName" name="name" type="text" placeholder="Enter your name" required>
+                <label for="deliveryEmail">Email address (optional)</label>
+                <input id="deliveryEmail" name="email" type="email" placeholder="Enter your email">
+                <label for="deliveryPhone">Phone number</label>
+                <input id="deliveryPhone" name="phone" type="tel" placeholder="Enter your phone number" required>
+                <label for="deliveryAddress">Delivery address</label>
+                <textarea id="deliveryAddress" name="address" placeholder="House, street, area" required></textarea>
+                <label for="deliveryCity">City / town</label>
+                <input id="deliveryCity" name="city" type="text" autocomplete="address-level2" required>
+                <label for="deliveryState">State / union territory</label>
+                <select id="deliveryState" name="state" data-indian-state required>
+                    <option value="">Select your state or union territory</option>
+                </select>
+                <label for="deliveryPincode">PIN code</label>
+                <input id="deliveryPincode" name="pincode" type="text" inputmode="numeric" autocomplete="postal-code" pattern="[1-9][0-9]{5}" maxlength="6" placeholder="6-digit PIN code" title="Enter a valid six-digit Indian PIN code" required>
+                <button type="submit">Save delivery details</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="login-modal" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="loginTitle" onclick="if (event.target === this) { this.classList.remove('is-open'); document.body.style.overflow = ''; }">
+        <div class="login-modal-content" onclick="event.stopPropagation()">
+            <button class="close-product-modal" type="button" aria-label="Close login form" onclick="document.getElementById('loginModal').classList.remove('is-open'); document.body.style.overflow = '';">&times;</button>
+            <h3 id="loginTitle">Login</h3>
+            <p>Please enter your name to continue.</p>
+            <form id="loginForm">
+                <label for="loginName">Your name</label>
+                <input id="loginName" name="name" type="text" placeholder="Enter your name" required />
+                <button type="submit" class="btn btn-primary">Continue</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="cart-modal" id="cartModal" role="dialog" aria-modal="true" aria-labelledby="cartTitle" onclick="if (event.target === this) closeCart()">
+        <div class="cart-content" onclick="event.stopPropagation()">
+            <div class="cart-header">
+                <h3 id="cartTitle"><i class="fas fa-shopping-cart"></i> Your Cart</h3>
+                <button class="close-cart" type="button" aria-label="Close cart" onclick="closeCart()">&times;</button>
+            </div>
+            <div class="cart-items" id="cartItems">
+                <p style="text-align: center; padding: 2rem; color: #666;">Your cart is empty</p>
+            </div>
+            <div class="delivery-details" id="deliveryDetails"></div>
+            <div class="cart-total">
+                <div class="cart-subtotal-label">₹39 delivery below ₹500; free delivery at ₹500+. Final amount confirmed in WhatsApp.</div>
+                <div class="total-price" id="totalPrice">₹0</div>
+                <button class="checkout-btn" type="button" onclick="checkout()">Proceed to Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>GALIYAN DAILY NEED</h3>
+                <p>Your neighborhood grocery store serving Bijnor and nearby areas. Ask us to confirm delivery availability.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html" style="color: #ccc;">Home</a></li>
+                    <li><a href="#categories" style="color: #ccc;">Categories</a></li>
+                    <li><a href="#products" style="color: #ccc;">Products</a></li>
+                    <li><a href="#contact" style="color: #ccc;">Contact</a></li>
+                    <li><a href="cart.html" style="color: #ccc;">Delivery &amp; checkout</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Store Hours</h3>
+                <p>Mon - Sat: 8:00 AM - 9:00 PM</p>
+                <p>Sun: 9:00 AM - 2:00 PM</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2026 GALIYAN DAILY NEED. All rights reserved.
+        </div>
+    </footer>
+
+    <script src="delivery.js"></script>
+    <script>
+        const CART_KEY = 'galiyan-cart';
+
+        function getCart() {
+            try {
+                const saved = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+                return Array.isArray(saved) ? saved : [];
+            } catch (error) {
+                return [];
+            }
+        }
+
+        function saveCart(cart) {
+            localStorage.setItem(CART_KEY, JSON.stringify(cart));
+        }
+
+        function escapeHTML(value) {
+            return String(value).replace(/[&<>"']/g, character => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            })[character]);
+        }
+
+        function renderCart() {
+            const cartItems = document.getElementById('cartItems');
+            const totalPrice = document.getElementById('totalPrice');
+            if (!cartItems || !totalPrice) return;
+
+            const cart = getCart();
+            if (!cart.length) {
+                cartItems.innerHTML = '<p style="text-align: center; padding: 2rem; color: #666;">Your cart is empty</p>';
+                totalPrice.textContent = '₹0';
+                return;
+            }
+
+            cartItems.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <div class="cart-item-image">
+                        ${item.image
+                            ? `<img src="${escapeHTML(item.image)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">`
+                            : '<i class="fas fa-shopping-basket" aria-hidden="true"></i>'}
+                    </div>
+                    <div class="cart-item-info">
+                        <div><strong>${escapeHTML(item.name)}</strong></div>
+                        <div class="product-weight">${escapeHTML(item.type || '')}</div>
+                        <div class="product-price">₹${Number(item.price)} × ${Number(item.qty)}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            const subtotal = cart.reduce((sum, item) => sum + (Number(item.price) * Number(item.qty)), 0);
+            totalPrice.textContent = '₹' + subtotal;
+        }
+
+        function updateCartCount() {
+            const cartCount = document.getElementById('cartCount');
+            if (!cartCount) return;
+            const count = getCart().reduce((sum, item) => sum + Number(item.qty || 0), 0);
+            cartCount.textContent = count;
+        }
+
+        function getUserName() {
+            try {
+                const user = JSON.parse(localStorage.getItem('galiyan-user') || 'null');
+                return user && user.name ? user.name : '';
+            } catch (error) {
+                return '';
+            }
+        }
+
+        function openLoginModal(action) {
+            const modal = document.getElementById('loginModal');
+            if (!modal) return;
+            window.galiyanPendingAction = action || null;
+            modal.classList.add('is-open');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => {
+                const field = document.getElementById('loginName');
+                if (field) field.focus();
+            }, 50);
+        }
+
+        function closeLoginModal() {
+            const modal = document.getElementById('loginModal');
+            if (!modal) return;
+            modal.classList.remove('is-open');
+            document.body.style.overflow = '';
+        }
+
+        function addToCart(productName, price, productType, image) {
+            const cart = getCart();
+            const currentItem = cart.find(item => item.name === productName);
+
+            if (currentItem) {
+                currentItem.qty += 1;
+                if (image && !currentItem.image) currentItem.image = image;
+            } else {
+                cart.push({ name: productName, price, qty: 1, type: productType, image });
+            }
+
+            saveCart(cart);
+            updateCartCount();
+            renderCart();
+
+            updateDeliveryDetails();
+            if (!window.GaliyanDelivery.getDetails()) {
+                openDeliveryPopup();
+            }
+        }
+
+        function toggleCart() {
+            const cartModal = document.getElementById('cartModal');
+            if (!cartModal) return;
+            const isOpen = cartModal.classList.toggle('is-open');
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+            if (isOpen) renderCart();
+        }
+
+        function closeCart() {
+            const cartModal = document.getElementById('cartModal');
+            if (!cartModal) return;
+            cartModal.classList.remove('is-open');
+            document.body.style.overflow = '';
+        }
+
+        function toggleHomeMenu() {
+            const menu = document.querySelector('.nav-menu');
+            const toggle = document.querySelector('.home-menu-toggle');
+            if (!menu || !toggle) return;
+            const isOpen = menu.classList.toggle('is-open');
+            toggle.setAttribute('aria-expanded', String(isOpen));
+            toggle.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
+        }
+
+        function openProductPopup(name, price, meta, image) {
+            document.getElementById('modalProductName').textContent = name;
+            document.getElementById('modalProductPrice').textContent = price;
+            document.getElementById('modalProductMeta').textContent = meta + '. Contact us for availability and delivery details.';
+            const productImage = document.getElementById('modalProductImage');
+            productImage.src = image;
+            productImage.alt = name;
+            document.getElementById('productModal').classList.add('is-open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeProductPopup(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('productModal').classList.remove('is-open');
+            document.body.style.overflow = '';
+        }
+
+        function openDeliveryPopup() {
+            document.getElementById('deliveryModal').classList.add('is-open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDeliveryPopup(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('deliveryModal').classList.remove('is-open');
+            document.body.style.overflow = '';
+        }
+
+        function updateDeliveryDetails() {
+            let details;
+            try {
+                details = JSON.parse(localStorage.getItem('galiyan-delivery-details') || 'null');
+            } catch (error) {
+                console.error('Could not read saved delivery details.', error);
+                return;
+            }
+            const deliveryDetails = document.getElementById('deliveryDetails');
+            if (!deliveryDetails || !details) return;
+            deliveryDetails.innerHTML = '';
+            const heading = document.createElement('strong');
+            heading.textContent = 'Delivery to:';
+            deliveryDetails.append(heading, document.createElement('br'));
+            deliveryDetails.append(document.createTextNode(details.name || ''), document.createElement('br'));
+            deliveryDetails.append(document.createTextNode([details.phone, details.email].filter(Boolean).join(' · ')), document.createElement('br'));
+            deliveryDetails.append(document.createTextNode([
+                details.address,
+                [details.city, details.state, details.pincode].filter(Boolean).join(', ')
+            ].filter(Boolean).join(', ')));
+        }
+
+        document.getElementById('productContactForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const name = formData.get('name') || 'Customer';
+            const phone = formData.get('phone') || '';
+            const message = formData.get('message') || 'No message provided';
+            const enquiry = [
+                'Hello GALIYAN DAILY NEED, I have a product enquiry.',
+                '',
+                'Name: ' + name,
+                'Phone: ' + phone,
+                '',
+                'Message:',
+                message
+            ].join('\n');
+            window.location.href = 'https://wa.me/919897312151?text=' + encodeURIComponent(enquiry);
+        });
+        document.querySelectorAll('.brand-logos [data-brand]').forEach(brand => {
+            brand.setAttribute('aria-label', `See all ${brand.textContent.trim()} products`);
+            brand.addEventListener('click', event => {
+                event.preventDefault();
+                event.stopPropagation();
+                window.location.href = `products.html?brand=${encodeURIComponent(brand.dataset.brand)}`;
+            });
+            brand.addEventListener('keydown', event => {
+                if (event.key !== 'Enter' && event.key !== ' ') return;
+                event.preventDefault();
+                event.stopPropagation();
+                window.location.href = `products.html?brand=${encodeURIComponent(brand.dataset.brand)}`;
+            });
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const input = document.getElementById('loginName');
+            const value = input ? input.value.trim() : '';
+            if (!value) {
+                alert('Please enter your name to continue.');
+                return;
+            }
+            localStorage.setItem('galiyan-user', JSON.stringify({ name: value }));
+            closeLoginModal();
+            alert('Welcome, ' + value + '!');
+
+            const pendingAction = window.galiyanPendingAction;
+            if (pendingAction && pendingAction.type === 'add') {
+                window.galiyanPendingAction = null;
+                addToCart(pendingAction.productName, pendingAction.price, pendingAction.productType, pendingAction.image);
+            }
+        });
+
+        document.getElementById('deliveryForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const details = {
+                name: formData.get('name').trim(),
+                email: formData.get('email').trim(),
+                phone: formData.get('phone').trim(),
+                address: formData.get('address').trim(),
+                city: formData.get('city').trim(),
+                state: formData.get('state'),
+                pincode: formData.get('pincode').trim()
+            };
+            try {
+                window.GaliyanDelivery.saveDetails(details);
+            } catch (error) {
+                console.error('Could not save delivery details.', error);
+                alert(error.message || 'Unable to save delivery details. Please try again.');
+                return;
+            }
+            window.GaliyanDelivery.updateLocationLabels();
+            updateDeliveryDetails();
+            closeDeliveryPopup();
+            alert('Address saved. Delivery coverage will be confirmed when you send your order request on WhatsApp.');
+        });
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeProductPopup();
+                closeDeliveryPopup();
+            }
+        });
+
+        function checkout() {
+            const cart = getCart();
+            if (!cart.length) {
+                alert('Your cart is empty. Add products before checkout.');
+                return;
+            }
+            window.location.href = 'cart.html';
+        }
+
+        updateCartCount();
+        updateDeliveryDetails();
+        renderCart();
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.querySelector('.nav-menu').classList.remove('is-open');
+                const toggle = document.querySelector('.home-menu-toggle');
+                toggle.setAttribute('aria-expanded', 'false');
+                toggle.setAttribute('aria-label', 'Open navigation menu');
+            });
+        });
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeCart();
+                closeProductPopup();
+                closeDeliveryPopup();
+                const menu = document.querySelector('.nav-menu');
+                const toggle = document.querySelector('.home-menu-toggle');
+                if (menu) menu.classList.remove('is-open');
+                if (toggle) {
+                    toggle.setAttribute('aria-expanded', 'false');
+                    toggle.setAttribute('aria-label', 'Open navigation menu');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GALIYAN DAILY NEED | About & Policies</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        .about-hero {
+            background: linear-gradient(90deg, rgba(18, 63, 53, .92), rgba(18, 63, 53, .42)), url("https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1800&q=85") center / cover;
+            color: white;
+            padding: 100px 0 86px;
+        }
+
+        .about-hero h1 {
+            max-width: 720px;
+            font-size: clamp(42px, 6vw, 72px);
+            line-height: 1;
+        }
+
+        .about-hero p {
+            max-width: 650px;
+            margin-top: 22px;
+            color: #e2f3eb;
+            font-size: 18px;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px;
+            margin-top: 34px;
+        }
+
+        .about-card {
+            padding: 28px;
+            background: white;
+            border: 1px solid #e6eee8;
+            border-radius: 16px;
+            box-shadow: 0 10px 28px rgba(38, 63, 50, .07);
+        }
+
+        .about-card .about-icon {
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            margin-bottom: 18px;
+            border-radius: 50%;
+            background: #e5f8d3;
+            color: #173f35;
+            font-size: 21px;
+        }
+
+        .about-card h3 {
+            margin-bottom: 9px;
+            color: #173f35;
+        }
+
+        .about-card p,
+        .about-card li {
+            color: #60756e;
+            font-size: 14px;
+        }
+
+        .about-card ul {
+            padding-left: 18px;
+            margin-top: 10px;
+        }
+
+        .policy-band {
+            background: #eef8ef;
+        }
+
+        .policy-content {
+            max-width: 900px;
+        }
+
+        .policy-content h2 {
+            margin-bottom: 12px;
+            color: #173f35;
+        }
+
+        .policy-content h3 {
+            margin-top: 24px;
+            margin-bottom: 6px;
+            color: #31584b;
+        }
+
+        .policy-content p {
+            color: #60756e;
+            font-size: 14px;
+        }
+
+        .contact-band {
+            background: #173f35;
+            color: white;
+        }
+
+        .contact-band .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 30px;
+        }
+
+        .contact-band p {
+            margin-top: 8px;
+            color: #d6ebe1;
+        }
+
+        .contact-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 2100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(13, 26, 21, .62);
+        }
+
+        .contact-modal.is-open {
+            display: flex;
+        }
+
+        .contact-modal-content {
+            position: relative;
+            width: min(520px, 100%);
+            max-height: min(90vh, 760px);
+            overflow-y: auto;
+            padding: 30px;
+            border-radius: 20px;
+            background: white;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, .24);
+        }
+
+        .contact-modal-content h2 {
+            margin-bottom: 6px;
+            color: #173f35;
+        }
+
+        .contact-modal-content > p {
+            margin-bottom: 20px;
+            color: #60756e;
+        }
+
+        .contact-modal-close {
+            position: absolute;
+            top: 12px;
+            right: 14px;
+            border: 0;
+            background: transparent;
+            color: #52675f;
+            font-size: 30px;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        #contactForm {
+            display: grid;
+            gap: 12px;
+        }
+
+        #contactForm label {
+            color: #173f35;
+            font-weight: 700;
+        }
+
+        #contactForm input,
+        #contactForm textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #d9e6df;
+            border-radius: 10px;
+            font: inherit;
+        }
+
+        #contactForm input:focus,
+        #contactForm textarea:focus {
+            outline: 2px solid rgba(23, 63, 53, .22);
+            border-color: #173f35;
+        }
+
+        #contactForm textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        #contactForm button:disabled {
+            cursor: wait;
+            opacity: .7;
+        }
+
+        .contact-form-status {
+            min-height: 24px;
+            color: #31584b;
+            font-size: 14px;
+        }
+
+        .contact-form-status[data-state="error"] {
+            color: #a32727;
+        }
+
+        .contact-form-status[data-state="pending"] {
+            color: #31584b;
+        }
+
+        .contact-honeypot {
+            position: absolute;
+            left: -10000px;
+        }
+
+        @media (max-width: 760px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-band .container {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <div class="container">
+            <div class="delivery"><i class="fas fa-location-dot"></i><span>Delivery in Bijnor and nearby areas · Free over ₹500</span></div>
+            <div class="social"><i class="fas fa-phone"></i><a href="tel:+919897312151" style="color: white; text-decoration: none;">Call +91 9897312151</a><a href="https://wa.me/919897312151" target="_blank" rel="noopener noreferrer" style="color: white; text-decoration: none;">WhatsApp</a></div>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="container nav-wrap">
+            <div class="brand">
+                <div class="brand-icon"><i class="fas fa-shopping-basket"></i></div>
+                <div><h1>GALIYAN</h1><span>GALIYAN DAILY NEED</span></div>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="categories.html">Categories</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="cart.html">Cart</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div class="location"><i class="fas fa-map-marker-alt"></i><span data-delivery-location>Set delivery location</span></div>
+                <button class="cart-button" onclick="window.location.href='cart.html'">
+                    <i class="fas fa-cart-shopping"></i><span>Cart</span><span class="badge" id="cartCount">0</span>
+                </button>
+                <button class="mobile-menu" id="navToggle" type="button" aria-label="Open navigation menu" aria-expanded="false"><i class="fas fa-bars" aria-hidden="true"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <section class="about-hero">
+        <div class="container">
+            <h1>Good groceries. Clear choices. Delivered with care.</h1>
+            <p>GALIYAN DAILY NEED brings familiar everyday brands and a simple way to request local delivery in Bijnor and nearby areas.</p>
+        </div>
+    </section>
+
+    <main>
+        <section class="section">
+            <div class="container">
+                <div class="section-title"><h2>Everything you need, made easier</h2><p>A neighborhood grocery experience with the convenience of online shopping.</p></div>
+                <div class="about-grid">
+                    <article class="about-card"><div class="about-icon"><i class="fas fa-basket-shopping"></i></div><h3>Choose your essentials</h3><p>Browse Atta, Rice, Snacks, Chocolates, Dairy, and daily-use products from familiar brands.</p></article>
+                    <article class="about-card"><div class="about-icon"><i class="fas fa-filter"></i></div><h3>Shop by brand</h3><p>Open a category and select a company to see everything available from that brand across the store.</p></article>
+                    <article class="about-card"><div class="about-icon"><i class="fas fa-truck-fast"></i></div><h3>Local delivery</h3><p>We currently serve Bijnor and nearby areas. Ask us on WhatsApp to confirm your exact location before ordering.</p></article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section policy-band">
+            <div class="container policy-content">
+                <h2>How to use this website</h2>
+                <h3>1. Browse products</h3><p>Start from Home, Categories, or Products. Use category and brand filters to find the right item quickly.</p>
+                <h3>2. View product details</h3><p>Click a popular product to open its image, price, product information, and enquiry form.</p>
+                <h3>3. Add to cart</h3><p>No account is needed. Add items, then enter your name, phone number, and delivery address. Email is optional.</p>
+                <h3>4. Request your order</h3><p>Review your cart and send the order request through WhatsApp. The store must confirm stock, delivery coverage, and final amount before your order is accepted.</p>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container about-grid">
+                <article class="about-card" id="privacy"><div class="about-icon"><i class="fas fa-shield-halved"></i></div><h3>Privacy policy</h3><p>Your cart and saved delivery address are stored in this browser. When you request an order, the site prepares a WhatsApp message; your details are shared with the store only if you choose to send that message.</p><ul><li>Do not enter sensitive payment passwords.</li><li>You can clear your saved address and cart by clearing this site's browser storage.</li><li>Contact us if you need help with your information.</li></ul></article>
+                <article class="about-card" id="terms"><div class="about-icon"><i class="fas fa-file-signature"></i></div><h3>Order and delivery terms</h3><p>A WhatsApp message is an order request, not an accepted order. The store confirms availability, delivery coverage, timing, and final amount before accepting it.</p><ul><li>Delivery is currently limited to Bijnor and nearby areas; confirm your exact location.</li><li>Prices and stock may change; the store confirms them in WhatsApp.</li><li>Ask the store about cancellation, returns, or refunds before confirming an order.</li></ul></article>
+                <article class="about-card"><div class="about-icon"><i class="fas fa-heart"></i></div><h3>Share your feedback</h3><p>Already ordered from us? Send honest feedback directly to the store. We only publish reviews with the customer's permission.</p><ul><li>No made-up ratings or testimonials</li><li>Tell us what went well or what needs work</li><li><a href="https://wa.me/919897312151?text=Hello%20GALIYAN%20DAILY%20NEED%2C%20I%20would%20like%20to%20share%20feedback%20about%20my%20order." target="_blank" rel="noopener noreferrer">Share feedback on WhatsApp</a></li></ul></article>
+            </div>
+        </section>
+    </main>
+
+    <section class="section contact-band" id="contact">
+        <div class="container"><div><h2>Need help with an order?</h2><p>Call +91 9897312151 or message us on WhatsApp about products and delivery.</p></div><button class="btn btn-primary" id="openContactModal" type="button">Contact us on WhatsApp</button></div>
+    </section>
+
+    <div class="contact-modal" id="contactModal" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle" aria-hidden="true">
+        <div class="contact-modal-content">
+            <button class="contact-modal-close" id="closeContactModal" type="button" aria-label="Close contact form">&times;</button>
+            <h2 id="contactModalTitle">How can we help?</h2>
+            <p>WhatsApp will open with your message. Review it and tap Send to contact the store.</p>
+            <form id="contactForm">
+                <label for="contactName">Your name</label>
+                <input id="contactName" name="name" type="text" maxlength="100" autocomplete="name" required />
+                <label for="contactEmail">Email address (optional)</label>
+                <input id="contactEmail" name="email" type="email" maxlength="254" autocomplete="email" />
+                <label for="contactPhone">Phone number (optional)</label>
+                <input id="contactPhone" name="phone" type="tel" maxlength="30" autocomplete="tel" />
+                <label for="contactMessage">Message</label>
+                <textarea id="contactMessage" name="message" maxlength="3000" required></textarea>
+                <div class="contact-honeypot" aria-hidden="true">
+                    <label for="contactWebsite">Leave this field empty</label>
+                    <input id="contactWebsite" name="website" type="text" tabindex="-1" autocomplete="off" />
+                </div>
+                <p class="contact-form-status" id="contactFormStatus" role="status" aria-live="polite"></p>
+                <button class="btn btn-primary" id="contactSubmit" type="submit">Continue to WhatsApp</button>
+            </form>
+        </div>
+    </div>
+
+    <footer class="site-footer"><div class="container footer-grid"><div><h3>GALIYAN DAILY NEED</h3><p>Fresh groceries and daily essentials for Bijnor and nearby areas. Ask us to confirm delivery availability.</p></div><div><h3>Shop</h3><ul><li><a href="categories.html">Categories</a></li><li><a href="products.html">Products</a></li><li><a href="cart.html">Cart</a></li></ul></div><div><h3>Information</h3><ul><li><a href="about.html">About us</a></li><li><a href="#privacy">Privacy policy</a></li><li><a href="#terms">Terms</a></li></ul></div><div><h3>Support</h3><p>Mon - Sat: 8:00 AM - 9:00 PM</p><p><a href="tel:+919897312151">Call +91 9897312151</a></p><p><a href="https://wa.me/919897312151" target="_blank" rel="noopener noreferrer">WhatsApp us</a></p></div></div><div class="footer-bottom">© 2026 GALIYAN DAILY NEED. All rights reserved.</div></footer>
+    <script src="delivery.js"></script>
+    <script src="script.js"></script>
+    <script src="contact.js"></script>
+</body>
+</html>
