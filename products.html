@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GALIYAN DAILY NEED | Products</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <script src="api-config.js"></script>
+    <script src="api.js"></script>
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
@@ -463,8 +465,8 @@
         async function refreshProductData() {
             try {
                 const [productsResponse, categoriesResponse] = await Promise.all([
-                    fetch('/api/products'),
-                    fetch('/api/categories')
+                    window.GaliyanApi.fetch('/api/products'),
+                    window.GaliyanApi.fetch('/api/categories')
                 ]);
                 if (!productsResponse.ok || !categoriesResponse.ok) throw new Error('Could not load catalogue data from the server.');
                 const [data, categories] = await Promise.all([productsResponse.json(), categoriesResponse.json()]);

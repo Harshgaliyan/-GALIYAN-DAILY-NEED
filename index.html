@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GALIYAN DAILY NEED - Grocery Store</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <script src="api-config.js"></script>
+    <script src="api.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css" />
     <style>
@@ -1395,7 +1397,7 @@
 
         async function loadManagedHomeProducts() {
             try {
-                const response = await fetch('/api/products');
+                const response = await window.GaliyanApi.fetch('/api/products');
                 if (!response.ok) throw new Error('Could not load featured products from the server.');
                 const products = await response.json();
                 if (!Array.isArray(products)) throw new Error('The product API returned an invalid catalogue.');

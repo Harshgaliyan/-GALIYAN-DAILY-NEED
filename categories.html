@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GALIYAN DAILY NEED | Categories</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <script src="api-config.js"></script>
+    <script src="api.js"></script>
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
@@ -244,7 +246,7 @@
             '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
         })[character]);
 
-        fetch('/api/categories')
+        window.GaliyanApi.fetch('/api/categories')
             .then(response => {
                 if (!response.ok) throw new Error('Could not load store categories.');
                 return response.json();

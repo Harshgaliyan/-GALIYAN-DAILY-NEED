@@ -11,15 +11,31 @@ const multer = require('multer');
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
-const dataDir = path.join(__dirname, 'data');
+const dataDir = path.resolve(process.env.DATA_DIR || path.join(__dirname, 'data'));
 const productsFile = path.join(dataDir, 'products.json');
 const categoriesFile = path.join(dataDir, 'categories.json');
 const ordersFile = path.join(dataDir, '.orders.json');
 const adminFile = path.join(dataDir, '.admin.json');
 const legacyAdminFile = path.join(dataDir, 'admin.json');
-const uploadDir = path.join(__dirname, 'uploads');
+const uploadDir = path.resolve(process.env.UPLOAD_DIR || path.join(__dirname, 'uploads'));
 const sessions = new Map();
 const SESSION_LIFETIME_MS = 8 * 60 * 60 * 1000;
+const allowedCorsOrigins = new Set(String(process.env.CORS_ORIGIN || '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean)
+    .map((origin) => {
+        let parsed;
+        try {
+            parsed = new URL(origin);
+        } catch (error) {
+            throw new Error(`Invalid CORS_ORIGIN entry "${origin}". Use the full website origin, for example https://shop.example.com.`);
+        }
+        if (!['http:', 'https:'].includes(parsed.protocol) || parsed.origin !== origin) {
+            throw new Error(`Invalid CORS_ORIGIN entry "${origin}". Use only the origin, without a path.`);
+        }
+        return parsed.origin;
+    }));
 const DEFAULT_CATEGORIES = [
     { id: 'atta', name: 'Atta & Grain' },
     { id: 'rice', name: 'Rice & Staples' },
@@ -79,8 +95,22 @@ const initialiseData = async () => {
     fs.mkdirSync(dataDir, { recursive: true });
     fs.mkdirSync(uploadDir, { recursive: true });
 
-    if (!fs.existsSync(productsFile)) writeProducts([]);
-    if (!fs.existsSync(categoriesFile)) writeCategories(DEFAULT_CATEGORIES);
+    if (!fs.existsSync(productsFile)) {
+        const bundledProductsFile = path.join(__dirname, 'data', 'products.json');
+        if (path.resolve(productsFile) !== path.resolve(bundledProductsFile) && fs.existsSync(bundledProductsFile)) {
+            fs.copyFileSync(bundledProductsFile, productsFile);
+        } else {
+            writeProducts([]);
+        }
+    }
+    if (!fs.existsSync(categoriesFile)) {
+        const bundledCategoriesFile = path.join(__dirname, 'data', 'categories.json');
+        if (path.resolve(categoriesFile) !== path.resolve(bundledCategoriesFile) && fs.existsSync(bundledCategoriesFile)) {
+            fs.copyFileSync(bundledCategoriesFile, categoriesFile);
+        } else {
+            writeCategories(DEFAULT_CATEGORIES);
+        }
+    }
     if (!fs.existsSync(ordersFile)) writeOrders([]);
 
     const storedProducts = JSON.parse(fs.readFileSync(productsFile, 'utf8'));
@@ -137,6 +167,26 @@ const requireAdmin = (request, response, next) => {
 };
 
 app.use(express.json({ limit: '10kb' }));
+app.use((request, response, next) => {
+    const origin = request.get('origin');
+    if (!origin || !request.path.startsWith('/api/')) return next();
+
+    if (!allowedCorsOrigins.has(origin)) {
+        if (request.method === 'OPTIONS') {
+            return response.status(403).json({ error: 'This website origin is not allowed to use the API. Configure CORS_ORIGIN on the API server.' });
+        }
+        return next();
+    }
+
+    response.setHeader('Access-Control-Allow-Origin', origin);
+    response.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    response.setHeader('Access-Control-Allow-Headers', 'Authorization, Content-Type');
+    response.setHeader('Access-Control-Max-Age', '600');
+    response.vary('Origin');
+    if (request.method === 'OPTIONS') return response.sendStatus(204);
+    return next();
+});
+app.use('/uploads', express.static(uploadDir, { dotfiles: 'deny', index: false, maxAge: '1d' }));
 app.use(express.static(__dirname));
 
 const imageUpload = multer({

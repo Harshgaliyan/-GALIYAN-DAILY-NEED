@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const checkoutButtons = [...document.querySelectorAll('.checkout-button, .checkout-btn')];
         checkoutButtons.forEach((button) => { button.disabled = true; });
         try {
-            const productsResponse = await fetch('/api/products');
+            const productsResponse = await window.GaliyanApi.fetch('/api/products');
             if (!productsResponse.ok) throw new Error('Could not verify product availability. Please try again.');
             const products = await productsResponse.json();
             if (!Array.isArray(products)) throw new Error('The store returned an invalid product catalogue.');
@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!product) throw new Error(`${item.name} is no longer available. Remove it from your cart and add a current product.`);
                 return { productId: Number(product.id), quantity: Number(item.qty), name: product.name || product.title, price: Number(product.price) };
             });
-            const response = await fetch('/api/orders', {
+            const response = await window.GaliyanApi.fetch('/api/orders', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ customer: deliveryDetails, items: orderItems })

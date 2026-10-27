@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GALIYAN Admin Dashboard</title>
+  <script src="api-config.js"></script>
+  <script src="api.js"></script>
   <style>
     :root {
       color-scheme: light;
@@ -277,14 +279,7 @@
     }
 
     async function fetchApi(url, options) {
-      try {
-        return await fetch(url, options);
-      } catch (error) {
-        if (error instanceof TypeError) {
-          throw new Error('Cannot reach the admin server. Start it with "npm start" and open this page from that server (for local use: http://localhost:3000/admin.html).');
-        }
-        throw error;
-      }
+      return window.GaliyanApi.fetch(url, options);
     }
 
     async function adminFetch(url, options = {}) {
