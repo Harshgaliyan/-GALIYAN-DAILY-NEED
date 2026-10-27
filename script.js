@@ -36,15 +36,24 @@ document.addEventListener('DOMContentLoaded', () => {
         cartCount.textContent = total;
     };
 
-    const addToCart = (name, price, qty = 1, image = '') => {
+    const addToCart = (name, price, qty = 1, image = '', productId = null, stock = null) => {
         const cart = getCart();
-        const found = cart.find((item) => item.name === name);
+        const found = cart.find((item) => productId
+            ? Number(item.productId) === Number(productId)
+            : item.name === name);
+        const hasStockLimit = stock !== null && stock !== undefined && Number.isFinite(Number(stock));
 
         if (found) {
+            if (hasStockLimit && found.qty + qty > Number(stock)) {
+                alert(`Only ${Number(stock)} ${name} are currently in stock.`);
+                return;
+            }
             found.qty += qty;
             found.image = image || found.image;
+            if (productId) found.productId = Number(productId);
+            if (hasStockLimit) found.stock = Number(stock);
         } else {
-            cart.push({ name, price, qty, image });
+            cart.push({ productId: productId ? Number(productId) : undefined, name, price, qty, image, stock });
         }
 
         saveCart(cart);
@@ -91,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="qty-controls">
                         <button type="button" aria-label="Remove one ${escapeHTML(item.name)}" data-action="decrease" data-name="${escapeHTML(item.name)}">-</button>
                         <span>${Number(item.qty)}</span>
-                        <button type="button" aria-label="Add one ${escapeHTML(item.name)}" data-action="increase" data-name="${escapeHTML(item.name)}">+</button>
+                        <button type="button" aria-label="Add one ${escapeHTML(item.name)}" data-action="increase" data-name="${escapeHTML(item.name)}" ${item.stock !== null && item.stock !== undefined && Number.isFinite(Number(item.stock)) && Number(item.qty) >= Number(item.stock) ? 'disabled' : ''}>+</button>
                     </div>
                 </div>
                 <div class="price">₹${Number(item.price) * Number(item.qty)}</div>
@@ -113,6 +122,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const name = button.dataset.name;
                 const updatedCart = getCart().map((item) => {
                     if (item.name !== name) return item;
+                    if (action === 'increase' && item.stock !== null && item.stock !== undefined &&
+                        Number.isFinite(Number(item.stock)) && Number(item.qty) >= Number(item.stock)) return item;
                     return {
                         ...item,
                         qty: action === 'increase' ? item.qty + 1 : item.qty - 1
@@ -152,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = '';
     };
 
-    const handleCheckout = () => {
+    const handleCheckout = async () => {
         const cart = getCart();
         if (!cart.length) {
             alert('Your cart is empty. Add products before checkout.');
@@ -171,27 +182,48 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const subtotal = cart.reduce((sum, item) => sum + (Number(item.price) * Number(item.qty)), 0);
-        const delivery = getDeliveryFee(subtotal);
-        const estimatedTotal = subtotal + delivery;
-        const items = cart.map((item, index) =>
-            `${index + 1}. ${item.name} × ${Number(item.qty)} — ₹${Number(item.price) * Number(item.qty)}`
-        ).join('\n');
         const address = [
             deliveryDetails.address,
             deliveryDetails.city,
             deliveryDetails.state,
             deliveryDetails.pincode
         ].filter(Boolean).join(', ');
-        const message = [
+        const checkoutButtons = [...document.querySelectorAll('.checkout-button, .checkout-btn')];
+        checkoutButtons.forEach((button) => { button.disabled = true; });
+        try {
+            const productsResponse = await fetch('/api/products');
+            if (!productsResponse.ok) throw new Error('Could not verify product availability. Please try again.');
+            const products = await productsResponse.json();
+            if (!Array.isArray(products)) throw new Error('The store returned an invalid product catalogue.');
+            const orderItems = cart.map((item) => {
+                const product = products.find((entry) => item.productId
+                    ? Number(entry.id) === Number(item.productId)
+                    : entry.name === item.name || entry.title === item.name);
+                if (!product) throw new Error(`${item.name} is no longer available. Remove it from your cart and add a current product.`);
+                return { productId: Number(product.id), quantity: Number(item.qty), name: product.name || product.title, price: Number(product.price) };
+            });
+            const response = await fetch('/api/orders', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ customer: deliveryDetails, items: orderItems })
+            });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error || 'Could not save your order request.');
+            const subtotal = Number(result.subtotal);
+            const delivery = Number(result.delivery);
+            const items = result.items.map((item, index) =>
+                `${index + 1}. ${item.name} × ${item.quantity} — ₹${item.lineTotal}`
+            ).join('\n');
+            const message = [
             'Hello GALIYAN DAILY NEED! I would like to request this order.',
+            `Order reference: ${result.id}`,
             '',
             'Items:',
             items,
             '',
             `Subtotal: ₹${subtotal}`,
             `Delivery: ${delivery === 0 ? 'Free' : `₹${delivery}`}`,
-            `Estimated total: ₹${estimatedTotal}`,
+            `Estimated total: ₹${Number(result.total)}`,
             'Payment preference: Cash on Delivery (please confirm)',
             '',
             `Name: ${deliveryDetails.name}`,
@@ -199,10 +231,16 @@ document.addEventListener('DOMContentLoaded', () => {
             deliveryDetails.email ? `Email: ${deliveryDetails.email}` : '',
             `Delivery address: ${address}`,
             '',
-            'Please confirm item availability, delivery coverage, and the final amount. This is an order request, not a confirmed order. The store will confirm it in WhatsApp.'
+            'Please reply in this WhatsApp chat to confirm whether you can fulfill this order, including item availability, delivery coverage, and the final amount.',
+            'I understand this is an order request and is not confirmed until you reply.'
         ].filter(Boolean).join('\n');
 
-        window.location.href = `https://wa.me/919897312151?text=${encodeURIComponent(message)}`;
+            window.location.href = `https://wa.me/919897312151?text=${encodeURIComponent(message)}`;
+        } catch (error) {
+            alert(error.message || 'Could not submit your order request. Please try again.');
+        } finally {
+            checkoutButtons.forEach((button) => { button.disabled = false; });
+        }
     };
 
     document.querySelectorAll('[data-add-cart]').forEach((button) => {
@@ -211,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const name = button.dataset.name || 'Product';
             const price = Number(button.dataset.price || 0);
 
-            addToCart(name, price, 1);
+            addToCart(name, price, 1, button.dataset.image || '', Number(button.dataset.productId) || null, Number(button.dataset.stock));
 
             const originalText = button.dataset.label || 'Add to Cart';
             button.textContent = 'Added';

@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GALIYAN DAILY NEED | Categories</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
@@ -68,7 +69,7 @@
 
     <section class="section">
         <div class="container">
-            <div class="category-grid">
+            <div class="category-grid" id="managedCategoryGrid">
                 <article class="category-card">
                     <div class="category-image"><img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80" alt="Fresh bakery and wheat products" loading="lazy" decoding="async"></div>
                     <div class="icon"><i class="fas fa-wheat-awn"></i></div>
@@ -195,5 +196,80 @@
 
     <script src="delivery.js"></script>
     <script src="script.js"></script>
+    <script>
+        const categoryCardDetails = {
+            atta: {
+                image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80',
+                icon: 'fas fa-wheat-awn',
+                description: 'Fresh wheat flour and daily family essentials.'
+            },
+            rice: {
+                image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=800&q=80',
+                icon: 'fas fa-bowl-rice',
+                description: 'Rice, pulses, poha, dhals and everyday kitchen basics.'
+            },
+            snacks: {
+                image: 'img/biscuiticon.webp',
+                icon: 'fas fa-cookie-bite',
+                description: 'Tea-time biscuits, namkeen, wafers and salted snacks.'
+            },
+            chocolate: {
+                image: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=800&q=80',
+                icon: 'fas fa-candy-cane',
+                description: 'Chocolates, mithai, kids snacks and sweet treats.'
+            },
+            beverages: {
+                image: 'img/TATA-Consumers.jpg',
+                icon: 'fas fa-mug-hot',
+                description: 'Tea powder, coffee, drinks and ready daily mixes.'
+            },
+            dairy: {
+                image: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=800&q=80',
+                icon: 'fas fa-bottle-water',
+                description: 'Milk, curd, bread, eggs and breakfast essentials.'
+            },
+            spices: {
+                image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=800&q=80',
+                icon: 'fas fa-spoon',
+                description: 'Masala, spices and kitchen seasonings.'
+            },
+            oils: {
+                image: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=800&q=80',
+                icon: 'fas fa-bottle-droplet',
+                description: 'Everyday cooking oils and kitchen essentials.'
+            }
+        };
+
+        const escapeCategoryHTML = (value) => String(value ?? '').replace(/[&<>"']/g, character => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        })[character]);
+
+        fetch('/api/categories')
+            .then(response => {
+                if (!response.ok) throw new Error('Could not load store categories.');
+                return response.json();
+            })
+            .then(categories => {
+                if (!Array.isArray(categories)) throw new Error('The category API returned invalid data.');
+                const categoryGrid = document.getElementById('managedCategoryGrid');
+                categoryGrid.innerHTML = categories.map(category => {
+                    const details = categoryCardDetails[category.id] || {
+                        image: 'img/pngtree-empty-shopping-basket-on-wood-table-over-grocery-store-supermarket-blur-image_15653639.jpg',
+                        icon: 'fas fa-basket-shopping',
+                        description: `Browse products in ${category.name}.`
+                    };
+                    return `<article class="category-card">
+                        <div class="category-image"><img src="${details.image}" alt="${escapeCategoryHTML(category.name)}" loading="lazy" decoding="async"></div>
+                        <div class="icon"><i class="${details.icon}" aria-hidden="true"></i></div>
+                        <h3>${escapeCategoryHTML(category.name)}</h3>
+                        <p>${escapeCategoryHTML(details.description)}</p>
+                        <div class="hero-actions" style="justify-content:center; margin-top:18px;">
+                            <a class="btn btn-primary" href="products.html?category=${encodeURIComponent(category.id)}">Shop Now</a>
+                        </div>
+                    </article>`;
+                }).join('');
+            })
+            .catch(error => console.error('Could not update the category list from the backend.', error));
+    </script>
 </body>
 </html>

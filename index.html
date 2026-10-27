@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GALIYAN DAILY NEED - Grocery Store</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css" />
     <style>
@@ -1011,7 +1012,7 @@
         <div class="categories">
             <h2 class="section-title">Popular Products</h2>
             <p class="product-disclaimer">Product photos are illustrative. Please confirm current price and availability with us on <a href="https://wa.me/919897312151" target="_blank" rel="noopener noreferrer">WhatsApp</a> before ordering.</p>
-            <div class="products-grid">
+            <div class="products-grid" id="homeProductGrid">
                 <div class="product-card" onclick="openProductPopup('Aashirvaad Shudh Chakki Atta', '₹285/5 kg', 'Whole Wheat Flour', 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=900&q=85')">
                     <div class="product-image">
                         <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=900&q=85" alt="Aashirvaad whole wheat atta" loading="lazy" decoding="async">
@@ -1311,15 +1312,23 @@
             document.body.style.overflow = '';
         }
 
-        function addToCart(productName, price, productType, image) {
+        function addToCart(productName, price, productType, image, productId, stock) {
             const cart = getCart();
-            const currentItem = cart.find(item => item.name === productName);
+            const currentItem = cart.find(item => productId ? Number(item.productId) === Number(productId) : item.name === productName);
 
             if (currentItem) {
+                if (Number.isFinite(stock) && currentItem.qty >= stock) {
+                    alert(`Only ${stock} ${productName} are currently in stock.`);
+                    return;
+                }
                 currentItem.qty += 1;
                 if (image && !currentItem.image) currentItem.image = image;
             } else {
-                cart.push({ name: productName, price, qty: 1, type: productType, image });
+                if (Number.isFinite(stock) && stock < 1) {
+                    alert(`${productName} is currently out of stock.`);
+                    return;
+                }
+                cart.push({ productId: productId ? Number(productId) : undefined, name: productName, price, qty: 1, type: productType, image, stock });
             }
 
             saveCart(cart);
@@ -1384,6 +1393,72 @@
             document.body.style.overflow = '';
         }
 
+        async function loadManagedHomeProducts() {
+            try {
+                const response = await fetch('/api/products');
+                if (!response.ok) throw new Error('Could not load featured products from the server.');
+                const products = await response.json();
+                if (!Array.isArray(products)) throw new Error('The product API returned an invalid catalogue.');
+
+                const grid = document.getElementById('homeProductGrid');
+                if (!products.length) {
+                    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;text-align:center;padding:2rem;">No products are currently available.</div>';
+                    return;
+                }
+
+                grid.innerHTML = products.slice(0, 6).map(product => `
+                    <article class="product-card" data-product-id="${Number(product.id)}" tabindex="0">
+                        <div class="product-image">
+                            <img src="${escapeHTML(product.image || '')}" alt="${escapeHTML(product.name || product.title || 'Product')}" loading="lazy" decoding="async">
+                        </div>
+                        <div class="product-info">
+                            <div class="product-brand"><span class="brand-mark" aria-hidden="true">${escapeHTML((product.brand || 'G').slice(0, 2).toUpperCase())}</span>${escapeHTML(product.brand || 'GALIYAN')}</div>
+                            <button class="product-title" type="button" data-product-detail="${Number(product.id)}">${escapeHTML(product.name || product.title || 'Product')}</button>
+                            <div class="product-price">₹${Number(product.price)}</div>
+                            <div class="product-weight">${escapeHTML(product.meta || '')}${Number(product.stock) > 0 ? ` · ${Number(product.stock)} in stock` : ' · Out of stock'}</div>
+                            <button class="add-to-cart" type="button" data-home-add="${Number(product.id)}" ${Number(product.stock) > 0 ? '' : 'disabled'}>${Number(product.stock) > 0 ? 'Add to Cart' : 'Out of stock'}</button>
+                        </div>
+                    </article>
+                `).join('');
+
+                const showDetails = (product) => openProductPopup(
+                    product.name || product.title || 'Product',
+                    `₹${Number(product.price)}`,
+                    product.meta || product.category || '',
+                    product.image || ''
+                );
+                grid.querySelectorAll('[data-product-id]').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const product = products.find(item => Number(item.id) === Number(card.dataset.productId));
+                        if (product) showDetails(product);
+                    });
+                    card.addEventListener('keydown', event => {
+                        if (event.key !== 'Enter' && event.key !== ' ') return;
+                        if (event.target !== card) return;
+                        event.preventDefault();
+                        const product = products.find(item => Number(item.id) === Number(card.dataset.productId));
+                        if (product) showDetails(product);
+                    });
+                });
+                grid.querySelectorAll('[data-product-detail]').forEach(button => {
+                    button.addEventListener('click', event => {
+                        event.stopPropagation();
+                        const product = products.find(item => Number(item.id) === Number(button.dataset.productDetail));
+                        if (product) showDetails(product);
+                    });
+                });
+                grid.querySelectorAll('[data-home-add]').forEach(button => {
+                    button.addEventListener('click', event => {
+                        event.stopPropagation();
+                        const product = products.find(item => Number(item.id) === Number(button.dataset.homeAdd));
+                        if (product) addToCart(product.name || product.title, Number(product.price), product.meta || product.category, product.image || '', Number(product.id), Number(product.stock));
+                    });
+                });
+            } catch (error) {
+                console.error('Could not load managed products for the home page.', error);
+            }
+        }
+
         function updateDeliveryDetails() {
             let details;
             try {
@@ -1423,6 +1498,7 @@
             ].join('\n');
             window.location.href = 'https://wa.me/919897312151?text=' + encodeURIComponent(enquiry);
         });
+
         document.querySelectorAll('.brand-logos [data-brand]').forEach(brand => {
             brand.setAttribute('aria-label', `See all ${brand.textContent.trim()} products`);
             brand.addEventListener('click', event => {
@@ -1501,6 +1577,7 @@
         updateCartCount();
         updateDeliveryDetails();
         renderCart();
+        loadManagedHomeProducts();
         document.querySelectorAll('.nav-menu a').forEach(link => {
             link.addEventListener('click', () => {
                 document.querySelector('.nav-menu').classList.remove('is-open');

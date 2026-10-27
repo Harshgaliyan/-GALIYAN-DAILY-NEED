@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GALIYAN DAILY NEED | Products</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
@@ -70,15 +71,7 @@
         <div class="container">
             <div class="filter-bar">
                 <div class="chips" id="categoryFilter">
-                    <button class="chip" type="button" onclick="filterByCategory('all')">All</button>
-                    <button class="chip" type="button" onclick="filterByCategory('atta')">Atta</button>
-                    <button class="chip" type="button" onclick="filterByCategory('rice')">Rice</button>
-                    <button class="chip" type="button" onclick="filterByCategory('snacks')">Snacks &amp; Tea</button>
-                    <button class="chip" type="button" onclick="filterByCategory('chocolate')">Chocolates</button>
-                    <button class="chip" type="button" onclick="filterByCategory('dairy')">Dairy</button>
-                    <button class="chip" type="button" onclick="filterByCategory('beverages')">Tea &amp; Beverages</button>
-                    <button class="chip" type="button" onclick="filterByCategory('spices')">Spices &amp; Masala</button>
-                    <button class="chip" type="button" onclick="filterByCategory('oils')">Cooking Oils</button>
+                    <button class="chip active" type="button" onclick="filterByCategory('all', this)">All</button>
                 </div>
                 <div class="btn btn-primary">Sort: Popular</div>
             </div>
@@ -215,6 +208,12 @@
             mdh: 'MDH'
         };
 
+        function escapeHTML(value) {
+            return String(value ?? '').replace(/[&<>"']/g, character => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            })[character]);
+        }
+
         const categoryImages = {
             atta: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80',
             rice: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=800&q=80',
@@ -252,6 +251,23 @@
         let currentCategory = 'all';
         let currentBrand = 'all';
         let currentSearch = '';
+        let availableCategories = [];
+
+        function renderCategoryFilters() {
+            const filter = document.getElementById('categoryFilter');
+            if (!filter) return;
+            filter.replaceChildren();
+            const addButton = (id, name) => {
+                const button = document.createElement('button');
+                button.className = 'chip' + (currentCategory === id ? ' active' : '');
+                button.type = 'button';
+                button.textContent = name;
+                button.addEventListener('click', () => filterByCategory(id, button));
+                filter.appendChild(button);
+            };
+            addButton('all', 'All');
+            availableCategories.forEach(category => addButton(category.id, category.name));
+        }
 
         function renderBrandFilters() {
             const brandFilter = document.getElementById('brandFilter');
@@ -259,13 +275,23 @@
 
             const brands = [...new Set(products.map(product => product.brand))]
                 .sort((first, second) => (brandNames[first] || first).localeCompare(brandNames[second] || second));
-            brandFilter.innerHTML = [
-                '<button type="button" class="chip brand-chip active" onclick="filterByBrand(\'all\', this)">All brands</button>',
-                ...brands.map(brand => {
-                    const count = products.filter(product => product.brand === brand).length;
-                    return `<button type="button" class="chip brand-chip" onclick="filterByBrand('${brand}', this)">${brandNames[brand] || brand} <span class="brand-count">${count}</span></button>`;
-                })
-            ].join('');
+            brandFilter.replaceChildren();
+            const addButton = (brand, label, count = null) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'chip brand-chip' + (currentBrand === brand ? ' active' : '');
+                button.append(document.createTextNode(label));
+                if (count !== null) {
+                    const countLabel = document.createElement('span');
+                    countLabel.className = 'brand-count';
+                    countLabel.textContent = count;
+                    button.append(' ', countLabel);
+                }
+                button.addEventListener('click', () => filterByBrand(brand, button));
+                brandFilter.appendChild(button);
+            };
+            addButton('all', 'All brands');
+            brands.forEach(brand => addButton(brand, brandNames[brand] || brand, products.filter(product => product.brand === brand).length));
         }
 
         function getQueryParam(param) {
@@ -273,10 +299,14 @@
             return urlParams.get(param);
         }
 
-        function filterByCategory(category) {
-            const validCategories = ['all', ...new Set(products.map(product => product.category))];
+        function filterByCategory(category, selectedChip) {
+            const validCategories = ['all', ...availableCategories.map(item => item.id)];
             currentCategory = validCategories.includes(category) ? category : 'all';
             currentBrand = 'all';
+            document.querySelectorAll('#categoryFilter .chip').forEach(chip => chip.classList.remove('active'));
+            const activeChip = selectedChip || [...document.querySelectorAll('#categoryFilter .chip')]
+                .find(chip => chip.textContent === (availableCategories.find(item => item.id === currentCategory)?.name || 'All'));
+            if (activeChip) activeChip.classList.add('active');
             const pageTitle = document.getElementById('pageTitle');
             const pageSubtitle = document.getElementById('pageSubtitle');
             renderBrandFilters();
@@ -285,18 +315,9 @@
                 pageTitle.textContent = 'Fresh Grocery Products';
                 pageSubtitle.textContent = 'From fresh fruits to daily essentials, find everything you need for your home.';
             } else {
-                const categoryNames = {
-                    'atta': 'Atta & Grain',
-                    'rice': 'Rice & Staples',
-                    'snacks': 'Biscuits & Snacks',
-                    'chocolate': 'Chocolates & Sweets',
-                    'dairy': 'Dairy Products',
-                    'beverages': 'Tea & Beverages',
-                    'spices': 'Spices & Masala',
-                    'oils': 'Cooking Oils'
-                };
-                pageTitle.textContent = categoryNames[currentCategory] || 'Products';
-                pageSubtitle.textContent = 'Explore our collection of ' + (categoryNames[currentCategory] || 'products').toLowerCase();
+                const categoryName = availableCategories.find(item => item.id === currentCategory)?.name || 'Products';
+                pageTitle.textContent = categoryName;
+                pageSubtitle.textContent = 'Explore our collection of ' + categoryName.toLowerCase();
             }
             
             renderProducts();
@@ -309,7 +330,8 @@
             currentBrand = brand;
             currentCategory = 'all';
             document.querySelectorAll('.brand-chip').forEach(chip => chip.classList.remove('active'));
-            const activeChip = selectedChip || document.querySelector(`.brand-chip[onclick="filterByBrand('${brand}', this)"]`);
+            const activeChip = selectedChip || [...document.querySelectorAll('.brand-chip')]
+                .find(chip => chip.textContent.trim().startsWith(brand === 'all' ? 'All brands' : (brandNames[brand] || brand)));
             if (activeChip) activeChip.classList.add('active');
             const pageTitle = document.getElementById('pageTitle');
             const pageSubtitle = document.getElementById('pageSubtitle');
@@ -347,22 +369,33 @@
             }
             
             grid.innerHTML = filtered.map(product => `
-                <article class="product-card" onclick="showProductDetail(${product.id})" style="cursor: pointer;" data-pack-image="${[11, 12, 13].includes(product.id)}">
+                <article class="product-card" data-product-id="${Number(product.id)}" style="cursor: pointer;" data-pack-image="${[11, 12, 13].includes(product.id)}">
                     <div class="product-image">
-                        <img src="${product.image || productImages[product.id] || categoryImages[product.category]}" alt="${product.name}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='${categoryImages[product.category]}';">
+                        <img src="${escapeHTML(product.image || productImages[product.id] || categoryImages[product.category] || 'img/biscuiticon.webp')}" alt="${escapeHTML(product.name)}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='${escapeHTML(categoryImages[product.category] || 'img/biscuiticon.webp')}';">
                         <i class="${product.icon}" style="display: none;"></i>
                     </div>
                     <div class="product-body">
-                        ${product.range ? `<div class="product-range">${product.range}</div>` : ''}
-                        <h3>${product.name}</h3>
-                        <div class="meta">${product.meta}</div>
+                        ${product.range ? `<div class="product-range">${escapeHTML(product.range)}</div>` : ''}
+                        <h3>${escapeHTML(product.name)}</h3>
+                        <div class="meta">${escapeHTML(product.meta)}</div>
+                        <div class="meta">${Number(product.stock) > 0 ? `${Number(product.stock)} in stock` : 'Out of stock'}</div>
                         <div class="product-row">
-                            <span class="price">₹${product.price}</span>
-                            <button class="add-cart" onclick="event.stopPropagation(); addToCart('${product.name}', ${product.price}, '${product.image || productImages[product.id] || categoryImages[product.category]}')" data-label="Add to Cart">Add to Cart</button>
+                            <span class="price">₹${Number(product.price)}</span>
+                            <button class="add-cart" type="button" data-add-product="${Number(product.id)}" data-label="Add to Cart" ${Number(product.stock) > 0 ? '' : 'disabled'}>${Number(product.stock) > 0 ? 'Add to Cart' : 'Out of stock'}</button>
                         </div>
                     </div>
                 </article>
             `).join('');
+            grid.querySelectorAll('[data-product-id]').forEach(card => {
+                card.addEventListener('click', () => showProductDetail(Number(card.dataset.productId)));
+            });
+            grid.querySelectorAll('[data-add-product]').forEach(button => {
+                button.addEventListener('click', event => {
+                    event.stopPropagation();
+                    const product = products.find(item => Number(item.id) === Number(button.dataset.addProduct));
+                    if (product) addToCart(product.name, product.price, product.image || productImages[product.id] || categoryImages[product.category] || '', product.id, Number(product.stock));
+                });
+            });
         }
 
         function showProductDetail(productId) {
@@ -400,17 +433,21 @@
             document.body.style.overflow = '';
         }
 
-        function addToCart(name, price, image) {
+        function addToCart(name, price, image, productId, stock) {
             const CART_KEY = 'galiyan-cart';
             try {
                 const cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
-                const existing = cart.find(item => item.name === name);
+                const existing = cart.find(item => Number(item.productId) === Number(productId));
                 
                 if (existing) {
+                    if (existing.qty >= stock) {
+                        alert(`Only ${stock} ${name} are currently in stock.`);
+                        return;
+                    }
                     existing.qty += 1;
                     existing.image = image || existing.image;
                 } else {
-                    cart.push({ name, price, qty: 1, image });
+                    cart.push({ productId: Number(productId), name, price, qty: 1, image, stock });
                 }
                 
                 localStorage.setItem(CART_KEY, JSON.stringify(cart));
@@ -423,14 +460,58 @@
             }
         }
 
+        async function refreshProductData() {
+            try {
+                const [productsResponse, categoriesResponse] = await Promise.all([
+                    fetch('/api/products'),
+                    fetch('/api/categories')
+                ]);
+                if (!productsResponse.ok || !categoriesResponse.ok) throw new Error('Could not load catalogue data from the server.');
+                const [data, categories] = await Promise.all([productsResponse.json(), categoriesResponse.json()]);
+                if (Array.isArray(data)) {
+                    const sanitized = data.map(product => ({
+                        ...product,
+                        id: Number(product.id || product._id || Date.now()),
+                        name: product.name || product.title || 'Product',
+                        title: product.title || product.name || 'Product',
+                        price: Number(product.price || 0),
+                        category: String(product.category || 'general'),
+                        brand: String(product.brand || 'generic'),
+                        image: product.image || '',
+                        meta: product.meta || '',
+                        description: product.description || '',
+                        active: product.active !== false
+                    }));
+                    products.splice(0, products.length, ...sanitized);
+                }
+                if (Array.isArray(categories)) availableCategories = categories;
+                renderCategoryFilters();
+                renderBrandFilters();
+            } catch (error) {
+                availableCategories = [
+                    { id: 'atta', name: 'Atta & Grain' },
+                    { id: 'rice', name: 'Rice & Staples' },
+                    { id: 'snacks', name: 'Biscuits & Snacks' },
+                    { id: 'chocolate', name: 'Chocolates & Sweets' },
+                    { id: 'dairy', name: 'Dairy Products' },
+                    { id: 'beverages', name: 'Tea & Beverages' },
+                    { id: 'spices', name: 'Spices & Masala' },
+                    { id: 'oils', name: 'Cooking Oils' }
+                ];
+                renderCategoryFilters();
+                console.error('Could not load the live product catalogue; showing local sample data.', error);
+            }
+        }
+
         // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             const category = getQueryParam('category');
             const brand = getQueryParam('brand');
             currentSearch = decodeURIComponent(getQueryParam('search') || '').trim();
             if (category) {
                 currentCategory = category;
             }
+            await refreshProductData();
             filterByCategory(currentCategory);
             if (brand) {
                 filterByBrand(brand);
@@ -441,7 +522,6 @@
                 title.textContent = 'Search results';
                 subtitle.textContent = `Showing items for "${currentSearch}"`;
             }
-
         });
     </script>
 </body>
